@@ -8,6 +8,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.WichtelApp" />
+        android:theme="@style/Theme.WichtelApp">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.WichtelApp.NoActionBar"></activity>
+    </application>
 
 </manifest>
