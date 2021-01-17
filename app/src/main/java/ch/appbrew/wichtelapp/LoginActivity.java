@@ -21,6 +21,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+
+/**
+ * This class is responsible to handle the login activity.
+ *
+ * @author svenwetter, marcokuenzler
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
@@ -32,15 +38,16 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         /**
-        if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
-        }*/
+         if (auth.getCurrentUser() != null) {
+         startActivity(new Intent(LoginActivity.this, MainActivity.class));
+         finish();
+         }*/
 
         setContentView(R.layout.activity_login);
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
+        final Button signupButton = findViewById(R.id.Signup);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -71,11 +78,11 @@ public class LoginActivity extends AppCompatActivity {
                                 // signed in user can be handled in the listener.
                                 loadingProgressBar.setVisibility(View.GONE);
                                 if (!task.isSuccessful()) {
-                                     if (password.length() < 6) {
-                                     passwordEditText.setError(getString(R.string.invalid_password));
-                                     } else {
-                                         Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_LONG).show();
-                                     }
+                                    if (password.length() < 6) {
+                                        passwordEditText.setError(getString(R.string.invalid_password));
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_LONG).show();
+                                    }
 
                                 } else {
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -84,6 +91,15 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }
                         });
+            }
+        });
+
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), SignupActivity.class);
+                startActivity(i);
+                setContentView(R.layout.activity_signup);
             }
         });
     }
