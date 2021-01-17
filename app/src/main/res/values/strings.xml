@@ -28,4 +28,5 @@
     <string name="signup"><b>Sign up</b></string>
     <string name="prompt_name">Name</string>
     <string name="repeatpassword">repeat Password</string>
+    <string name="title_activity_reset">ResetActivity</string>
 </resources>
