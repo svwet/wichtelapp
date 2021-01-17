@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(v.getContext(), SignupActivity.class);
                 startActivity(i);
-                setContentView(R.layout.activity_signup);
+                finish();
             }
         });
     }
