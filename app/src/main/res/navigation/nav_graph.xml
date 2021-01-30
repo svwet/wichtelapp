@@ -25,4 +25,24 @@
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/fragment_gruppen"
+        android:name="ch.appbrew.wichtelapp.GruppenFragment"
+        android:label="fragment_gruppen"
+        tools:layout="@layout/fragment_gruppen" />
+    <fragment
+        android:id="@+id/fragment_meineWunschliste"
+        android:name="ch.appbrew.wichtelapp.MeineWunschlisteFragment"
+        android:label="fragment_meineWunschliste"
+        tools:layout="@layout/fragment_meine_wunschliste" />
+    <fragment
+        android:id="@+id/fragment_wichtelwunschliste"
+        android:name="ch.appbrew.wichtelapp.WichtelwunschlisteFragment"
+        android:label="fragment_wichtelwunschliste"
+        tools:layout="@layout/fragment_wichtelwunschliste" />
+    <fragment
+        android:id="@+id/fragment_benutzereinstellung"
+        android:name="ch.appbrew.wichtelapp.BenutzereinstellungFragment"
+        android:label="fragment_benutzereinstellung"
+        tools:layout="@layout/fragment_benutzereinstellung" />
 </navigation>
