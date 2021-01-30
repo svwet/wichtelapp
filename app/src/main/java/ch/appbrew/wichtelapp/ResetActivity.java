@@ -36,6 +36,9 @@ public class ResetActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Log.d("Test", "Email sent.");
+                                    Intent i = new Intent(v.getContext(), ResetSuccessActivity.class);
+                                    startActivity(i);
+                                    ResetActivity.this.finish();
                                 }
                                 else {
                                     Log.d("Test", "Something went wrong!");
