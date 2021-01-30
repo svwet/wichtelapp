@@ -16,13 +16,16 @@
         tools:replace="android:allowBackup">
         <activity
             android:name=".SignupActivity"
-            android:label="SignupActivity" />
+            android:label="Registration" />
         <activity
             android:name=".ResetActivity"
-            android:label="ResetActivity"/>
+            android:label="Password zurücksetzen"/>
+        <activity
+            android:name=".ResetSuccessActivity"
+            android:label="Erfolgreich"/>
         <activity
             android:name=".LoginActivity"
-            android:label="LoginActivity">
+            android:label="Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

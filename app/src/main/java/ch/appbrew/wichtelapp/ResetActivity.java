@@ -14,10 +14,21 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+
+/**
+ * Activity class to reset password of passed user.
+ *
+ * @author svenwetter, marcokuenzler
+ */
 public class ResetActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
 
+    /**
+     * Create a new instance of the mapped activity.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +47,10 @@ public class ResetActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Log.d("Test", "Email sent.");
-                                }
-                                else {
+                                    Intent i = new Intent(v.getContext(), ResetSuccessActivity.class);
+                                    startActivity(i);
+                                    ResetActivity.this.finish();
+                                } else {
                                     Log.d("Test", "Something went wrong!");
                                 }
                             }

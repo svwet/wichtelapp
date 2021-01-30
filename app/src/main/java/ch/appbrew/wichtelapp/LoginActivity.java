@@ -38,12 +38,6 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        /**
-         if (auth.getCurrentUser() != null) {
-         startActivity(new Intent(LoginActivity.this, MainActivity.class));
-         finish();
-         }*/
-
         setContentView(R.layout.activity_login);
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
@@ -70,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 loadingProgressBar.setVisibility(View.VISIBLE);
 
-                //authenticate user
                 auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -95,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
                         });
             }
         });
-
 
         resetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
