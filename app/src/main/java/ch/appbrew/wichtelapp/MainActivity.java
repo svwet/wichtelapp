@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private NavController navController;
 
     //AppBarConfiguration:
+    private AppBarConfiguration appBarConfig;
 
 
     @Override
@@ -33,7 +36,16 @@ public class MainActivity extends AppCompatActivity {
         //Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        
+
+
+
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navView = findViewById(R.id.nav_view);
+        navController = Navigation.findNavController(this, R.id.nav_host);
+        appBarConfig = AppBarConfiguration()
+
+
     }
 
 }
