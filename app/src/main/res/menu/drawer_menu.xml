@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single" >
+        <item
+            android:id="@+id/FirstFragment"
+            android:title="Home"
+            android:icon="@drawable/ic_home"/>
+        <item
+            android:id="@+id/fragment_gruppen"
+            android:title="Gruppe"
+            android:icon="@drawable/ic_gruppe"/>
+
+        <item
+            android:id="@+id/fragment_meineWunschliste"
+            android:title="Meine Wunschliste"
+            android:icon="@drawable/ic_meinewunschliste"/>
+        <item
+            android:id="@+id/fragment_wichtelwunschliste"
+            android:title="Wichtelwunschliste"
+            android:icon="@drawable/ic_wichtelwunschliste"/>
+        <item
+            android:id="@+id/fragment_benutzereinstellung"
+            android:title="Benutzereinstellung"
+            android:icon="@drawable/ic_benutzereinstellung"/>
+    </group>
+</menu>
