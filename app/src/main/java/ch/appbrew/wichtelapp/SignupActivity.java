@@ -33,6 +33,7 @@ public class SignupActivity extends AppCompatActivity {
 
     /**
      * Creates a new signup instance.
+     *
      * @param savedInstanceState
      */
     @Override
@@ -58,7 +59,7 @@ public class SignupActivity extends AppCompatActivity {
                 final String name = editTextName.getText().toString();
                 //checkDataEntered(email, password, repeatPassword, name);
 
-                if(TextUtils.isEmpty(name)) {
+                if (TextUtils.isEmpty(name)) {
                     editTextName.setError("Enter name!");
                     return;
                 }
@@ -86,25 +87,13 @@ public class SignupActivity extends AppCompatActivity {
                                 } else {
                                     SignupActivity.this.startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                                     SignupActivity.this.finish();
-                                    Toast.makeText(getApplicationContext(), "New user registration", Toast.LENGTH_SHORT).show();;
+                                    Toast.makeText(getApplicationContext(), "New user registration", Toast.LENGTH_SHORT).show();
+                                    ;
                                 }
                             }
                         });
 
             }
         });
-    }
-
-    /**
-     * method is used for checking valid email id format.
-     *
-     * @param email
-     * @return boolean true for valid false for invalid
-     */
-    private static boolean isEmailValid(String email) {
-        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
     }
 }
