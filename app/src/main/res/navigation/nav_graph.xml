@@ -28,21 +28,21 @@
     <fragment
         android:id="@+id/fragment_gruppen"
         android:name="ch.appbrew.wichtelapp.GruppenFragment"
-        android:label="fragment_gruppen"
+        android:label="Gruppen"
         tools:layout="@layout/fragment_gruppen" />
     <fragment
         android:id="@+id/fragment_meineWunschliste"
         android:name="ch.appbrew.wichtelapp.MeineWunschlisteFragment"
-        android:label="fragment_meineWunschliste"
+        android:label="Meine Wunschliste"
         tools:layout="@layout/fragment_meine_wunschliste" />
     <fragment
         android:id="@+id/fragment_wichtelwunschliste"
         android:name="ch.appbrew.wichtelapp.WichtelwunschlisteFragment"
-        android:label="fragment_wichtelwunschliste"
+        android:label="Wichtel Wunschliste"
         tools:layout="@layout/fragment_wichtelwunschliste" />
     <fragment
         android:id="@+id/fragment_benutzereinstellung"
         android:name="ch.appbrew.wichtelapp.BenutzereinstellungFragment"
-        android:label="fragment_benutzereinstellung"
+        android:label="Benutzereinstellung"
         tools:layout="@layout/fragment_benutzereinstellung" />
 </navigation>
