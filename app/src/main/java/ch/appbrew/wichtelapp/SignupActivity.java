@@ -89,7 +89,7 @@ public class SignupActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(SignupActivity.this, getString(R.string.fui_error_unknown), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SignupActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
                                     loadingProgressBar.setVisibility(View.INVISIBLE);
                                     return;
                                 } else {
@@ -99,6 +99,12 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), "New user registration", Toast.LENGTH_SHORT).show();
                                     ;
                                 }
+                            }
+                        })
+                        .addOnFailureListener(SignupActivity.this, new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error while registrate user");
                             }
                         });
 
@@ -112,12 +118,12 @@ public class SignupActivity extends AppCompatActivity {
         map.put("Name", name);
         map.put("Benutzer", user);
 
-        database.collection("Benutzer")
+        database.collection("Benutzer").document(user).collection("Benutzereinstellungen")
                 .add(map)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "Document added with ID " + documentReference.get());
+                        Log.d(TAG, "Document added with ID " + documentReference.getId());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
