@@ -62,8 +62,6 @@ public class SignupActivity extends AppCompatActivity {
                 final String password = editTextPassword.getText().toString();
                 final String repeatPassword = editTextRepeatPassword.getText().toString();
                 final String name = editTextName.getText().toString();
-                //checkDataEntered(email, password, repeatPassword, name);
-
                 if (TextUtils.isEmpty(name)) {
                     editTextName.setError("Enter name!");
                     return;

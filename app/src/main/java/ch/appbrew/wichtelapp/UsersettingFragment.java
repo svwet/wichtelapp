@@ -1,34 +1,39 @@
 package ch.appbrew.wichtelapp;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import ch.appbrew.wichtelapp.utils.DialogUtil;
+
 import static android.content.ContentValues.TAG;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link UsersettingFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class UsersettingFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -42,15 +47,6 @@ public class UsersettingFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BenutzereinstellungFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static UsersettingFragment newInstance(String param1, String param2) {
         UsersettingFragment fragment = new UsersettingFragment();
         Bundle args = new Bundle();
@@ -72,7 +68,9 @@ public class UsersettingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        View view = inflater.inflate(R.layout.fragment_benutzereinstellung,
+                container, false);
+        Button button = (Button) view.findViewById(R.id.saveButton);
         auth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance();
         auth.getCurrentUser();
@@ -99,7 +97,62 @@ public class UsersettingFragment extends Fragment {
             }
         });
 
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                EditText oldPasswordEdit = (EditText) getView().findViewById(R.id.oldpassword);
+                EditText newPasswordEdit = (EditText) getView().findViewById(R.id.newpassword);
+                EditText newNameEdit = (EditText) getView().findViewById(R.id.name);
 
-        return inflater.inflate(R.layout.fragment_benutzereinstellung, container, false);
+                String oldPasswordStr = oldPasswordEdit.getText().toString();
+                String newPasswordStr = newPasswordEdit.getText().toString();
+                String newNameStr = newNameEdit.getText().toString();
+
+                if(!oldPasswordStr.isEmpty() && !newPasswordStr.isEmpty()) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    AuthCredential credential = EmailAuthProvider
+                            .getCredential(email, oldPasswordStr);
+
+                    user.reauthenticate(credential)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        user.updatePassword(newPasswordStr).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    DialogUtil.popupMessage("Settings has been updated", "Successful", getActivity());
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                       DialogUtil.popupMessage("Failed to update settings", "Failed", getActivity());
+                                    }
+                                }
+                            });
+                }
+                Map<String, Object> map = new HashMap<>();
+                map.put("Name", newNameStr);
+                map.put("Benutzer", email);
+                database.collection("Benutzer").document(email)
+                        .set(map)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "Document added with ID " + email);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error while adding document");
+                            }
+                        });
+            }
+        });
+        return view;
     }
 }
