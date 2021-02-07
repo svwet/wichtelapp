@@ -2,11 +2,23 @@ package ch.appbrew.wichtelapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +35,8 @@ public class UsersettingFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private FirebaseAuth auth;
+    private FirebaseFirestore database;
 
     public UsersettingFragment() {
         // Required empty public constructor
@@ -58,7 +72,34 @@ public class UsersettingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        auth = FirebaseAuth.getInstance();
+        database = FirebaseFirestore.getInstance();
+        auth.getCurrentUser();
+        final String email = auth.getCurrentUser().getEmail();
+
+        DocumentReference docRef = database.collection("Benutzer").document(email);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    final EditText nameText = (EditText) getView().findViewById(R.id.name);
+                    final EditText emailText = (EditText) getView().findViewById(R.id.username);
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        document.get("Name");
+                        nameText.setText(document.get("Name").toString());
+                        emailText.setText(email);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+
         return inflater.inflate(R.layout.fragment_benutzereinstellung, container, false);
     }
 }

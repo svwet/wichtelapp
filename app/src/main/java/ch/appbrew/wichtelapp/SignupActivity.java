@@ -115,12 +115,12 @@ public class SignupActivity extends AppCompatActivity {
         map.put("Name", name);
         map.put("Benutzer", user);
 
-        database.collection("Benutzer").document(user).collection("Benutzereinstellungen")
-                .add(map)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        database.collection("Benutzer").document(user)
+                .set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "Document added with ID " + documentReference.getId());
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Document added with ID " + user);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
