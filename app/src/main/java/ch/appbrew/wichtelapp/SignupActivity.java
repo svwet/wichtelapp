@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -14,13 +15,16 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * SignupActivity class to register a new user in the firebase database.
@@ -30,6 +34,7 @@ import java.util.regex.Pattern;
 public class SignupActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
+    private static final String TAG = "Message";
 
     /**
      * Creates a new signup instance.
@@ -57,8 +62,6 @@ public class SignupActivity extends AppCompatActivity {
                 final String password = editTextPassword.getText().toString();
                 final String repeatPassword = editTextRepeatPassword.getText().toString();
                 final String name = editTextName.getText().toString();
-                //checkDataEntered(email, password, repeatPassword, name);
-
                 if (TextUtils.isEmpty(name)) {
                     editTextName.setError("Enter name!");
                     return;
@@ -81,19 +84,48 @@ public class SignupActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(SignupActivity.this, getString(R.string.fui_error_unknown), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SignupActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
                                     loadingProgressBar.setVisibility(View.INVISIBLE);
                                     return;
                                 } else {
+                                    addUserToDatabase(name, email);
                                     SignupActivity.this.startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                                     SignupActivity.this.finish();
                                     Toast.makeText(getApplicationContext(), "New user registration", Toast.LENGTH_SHORT).show();
                                     ;
                                 }
                             }
+                        })
+                        .addOnFailureListener(SignupActivity.this, new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error while registrate user");
+                            }
                         });
 
             }
         });
+    }
+
+    private void addUserToDatabase(String name, String user) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        Map<String, Object> map = new HashMap<>();
+        map.put("Name", name);
+        map.put("Benutzer", user);
+
+        database.collection("Benutzer").document(user)
+                .set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Document added with ID " + user);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error while adding document");
+                    }
+                });
     }
 }
