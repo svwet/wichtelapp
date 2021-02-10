@@ -33,11 +33,9 @@ public class ResetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset);
-
         final EditText editTextEmail = findViewById(R.id.username);
         final Button resetButton = findViewById(R.id.reset);
         final com.google.android.material.floatingactionbutton.FloatingActionButton goBackButton = findViewById(R.id.resetGoBack);
-
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,18 +44,14 @@ public class ResetActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Log.d("Test", "Email sent.");
                                     Intent i = new Intent(v.getContext(), ResetSuccessActivity.class);
                                     startActivity(i);
                                     ResetActivity.this.finish();
-                                } else {
-                                    Log.d("Test", "Something went wrong!");
                                 }
                             }
                         });
             }
         });
-
         goBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -18,6 +18,10 @@ import java.util.ArrayList;
  * Use the {@link MeineWunschlisteFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+public class MyWishlistFragment extends Fragment {
+
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 public class MeineWunschlisteFragment extends Fragment {
     private ArrayList<MyWishListItem> myWishList;
     private RecyclerView mRecyclerView;
@@ -31,6 +35,8 @@ public class MeineWunschlisteFragment extends Fragment {
     private String mParam2;
 
     public MeineWunschlisteFragment() {
+    public MyWishlistFragment() {
+        // Required empty public constructor
     }
 
     /**
