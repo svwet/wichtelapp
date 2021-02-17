@@ -13,16 +13,8 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MeineWunschlisteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MyWishlistFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-public class MeineWunschlisteFragment extends Fragment {
     private ArrayList<MyWishListItem> myWishList;
     private RecyclerView mRecyclerView;
     private MyWishListAdapter mAdapter;
@@ -34,7 +26,6 @@ public class MeineWunschlisteFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public MeineWunschlisteFragment() {
     public MyWishlistFragment() {
         // Required empty public constructor
     }
@@ -47,8 +38,8 @@ public class MeineWunschlisteFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment MeineWunschlisteFragment.
      */
-    public static MeineWunschlisteFragment newInstance(String param1, String param2) {
-        MeineWunschlisteFragment fragment = new MeineWunschlisteFragment();
+    public static MyWishlistFragment newInstance(String param1, String param2) {
+        MyWishlistFragment fragment = new MyWishlistFragment();
         Bundle args = new Bundle();
         return fragment;
     }
