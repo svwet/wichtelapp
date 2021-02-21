@@ -2,7 +2,10 @@ package ch.appbrew.wichtelapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -78,9 +81,7 @@ public class MyWishlistFragment extends Fragment {
     }
     public void createExampleList() {
         myWishList = new ArrayList<>();
-        myWishList.add(new MyWishListItem(R.drawable.ic_user, "Line 1", "Line 2"));
-        myWishList.add(new MyWishListItem(R.drawable.ic_gruppe, "Line 3", "Line 4"));
-        myWishList.add(new MyWishListItem(R.drawable.ic_benutzereinstellung, "Line 5", "Line 6"));
+
     }
 
     public void buildRecyclerView(View view) {
@@ -106,9 +107,23 @@ public class MyWishlistFragment extends Fragment {
         buttonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position = 0;
-                insertItem(position);
+                NavHostFragment.findNavController(MyWishlistFragment.this)
+                        .navigate(R.id.action_fragment_meineWunschliste_to_addItemToWishlist);
             }
         });
     }
+
+    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            myWishList.remove(viewHolder.getAdapterPosition());
+            mAdapter.notifyDataSetChanged();
+
+        }
+    };
 }

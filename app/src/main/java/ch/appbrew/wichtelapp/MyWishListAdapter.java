@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -24,13 +26,13 @@ public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.My
         public ImageView productImage;
         public TextView productName;
         public TextView productDescription;
-        public ImageView mDeleteImage;
+        //public ImageView mDeleteImage;
         public MyWishListViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             productImage = itemView.findViewById(R.id.productImage);
             productName = itemView.findViewById(R.id.productName);
             productDescription = itemView.findViewById(R.id.productDescription);
-            mDeleteImage = itemView.findViewById(R.id.image_delete);
+            //mDeleteImage = itemView.findViewById(R.id.image_delete);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -42,17 +44,7 @@ public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.My
                     }
                 }
             });
-            mDeleteImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onDeleteClick(position);
-                        }
-                    }
-                }
-            });
+
         }
     }
     public MyWishListAdapter(ArrayList<MyWishListItem> exampleList) {
@@ -64,6 +56,7 @@ public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.My
         MyWishListViewHolder evh = new MyWishListViewHolder(v, mListener);
         return evh;
     }
+    //Holds the WishList Item
     @Override
     public void onBindViewHolder(MyWishListViewHolder holder, int position) {
         MyWishListItem currentItem = myWishList.get(position);
@@ -75,4 +68,7 @@ public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.My
     public int getItemCount() {
         return myWishList.size();
     }
+
+
+
 }
