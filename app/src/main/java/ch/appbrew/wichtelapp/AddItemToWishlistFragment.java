@@ -27,6 +27,7 @@ import android.widget.ImageView;
 
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
@@ -121,8 +122,23 @@ public class AddItemToWishlistFragment extends Fragment {
             }
 
         });
+        addToList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pushFirebase();
+            }
+        });
 
     }
+
+
+
+
+
+
+
+
+
 //    @Override
 //    public boolean onCreateOptionMenu(Menu menu){
 //
@@ -209,6 +225,21 @@ public class AddItemToWishlistFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance();
         auth.getCurrentUser();
+        final String email = auth.getCurrentUser().getEmail();
+        DocumentReference docRef = database.collection("MeineWunschliste").document(email);
+
+        addToList.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                EditText oldPasswordEdit = (EditText) getView().findViewById(R.id.insProductName);
+                EditText newPasswordEdit = (EditText) getView().findViewById(R.id.insProductDescription);
+                EditText newNameEdit = (EditText) getView().findViewById(R.id.);
+
+                String oldPasswordStr = oldPasswordEdit.getText().toString();
+                String newPasswordStr = newPasswordEdit.getText().toString();
+                String newNameStr = newNameEdit.getText().toString();
     }
 
 }
