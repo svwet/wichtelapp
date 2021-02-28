@@ -53,5 +53,9 @@
         android:id="@+id/addItemToWishlist"
         android:name="ch.appbrew.wichtelapp.AddItemToWishlistFragment"
         android:label="fragment_add_item_to_wishlist"
-        tools:layout="@layout/fragment_add_item_to_wishlist" />
+        tools:layout="@layout/fragment_add_item_to_wishlist" >
+        <action
+            android:id="@+id/action_addItemToWishlist_to_fragment_meineWunschliste"
+            app:destination="@id/fragment_meineWunschliste" />
+    </fragment>
 </navigation>

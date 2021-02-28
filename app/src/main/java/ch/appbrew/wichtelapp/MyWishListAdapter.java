@@ -23,7 +23,7 @@ public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.My
         mListener = listener;
     }
     public static class MyWishListViewHolder extends RecyclerView.ViewHolder {
-        public ImageView productImage;
+        public TextView productImage;
         public TextView productName;
         public TextView productDescription;
         //public ImageView mDeleteImage;
@@ -60,7 +60,7 @@ public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.My
     @Override
     public void onBindViewHolder(MyWishListViewHolder holder, int position) {
         MyWishListItem currentItem = myWishList.get(position);
-        holder.productImage.setImageResource(currentItem.getProductImage());
+        holder.productImage.setText(currentItem.getProductImage());
         holder.productName.setText(currentItem.getProductName());
         holder.productDescription.setText(currentItem.getProductDescription());
     }

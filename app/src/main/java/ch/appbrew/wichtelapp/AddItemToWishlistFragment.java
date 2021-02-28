@@ -10,7 +10,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -24,8 +26,11 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -65,6 +70,10 @@ public class AddItemToWishlistFragment extends Fragment {
     private ImageView viewImage;
     private Button addSnap;
     private Button addToList;
+
+    private EditText pushProductName;
+    private EditText pushProductDescription;
+    private EditText pushProductPicture;
 
     private FirebaseAuth auth;
     private FirebaseFirestore database;
@@ -108,6 +117,7 @@ public class AddItemToWishlistFragment extends Fragment {
                 container, false);
 
         setButton(view);
+
         return view;
     }
 
@@ -126,8 +136,11 @@ public class AddItemToWishlistFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 pushFirebase();
+
             }
         });
+
+
 
     }
 
@@ -139,13 +152,18 @@ public class AddItemToWishlistFragment extends Fragment {
 
 
 
-//    @Override
-//    public boolean onCreateOptionMenu(Menu menu){
-//
-//        getMenuInflater().inflate(R.menu.main ,menu);
-//        return true;
-//    }
+
+    public boolean onCreateOptionMenu(Menu menu){
+
+        getActivity().getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+//https://www.c-sharpcorner.com/UploadFile/e14021/capture-image-from-camera-and-selecting-image-from-gallery-o/
     private void selectImage(){
+
+        viewImage=(ImageView) getView().findViewById(R.id.viewImage);
+
         final CharSequence[] options = { "Take Photo", "Choose from Gallery", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add Photo");
@@ -155,7 +173,13 @@ public class AddItemToWishlistFragment extends Fragment {
                 if (options[item].equals("Take Photo")){
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-                    startActivityForResult(intent,2);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                    startActivityForResult(intent,1);
+
+                }
+                else if(options[item].equals("Choose from Gallery")){
+                    Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, 2);
                 }
                 else if(options[item].equals("Cancel")){
                     dialog.dismiss();
@@ -181,9 +205,10 @@ public class AddItemToWishlistFragment extends Fragment {
                     BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                     bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
                     viewImage.setImageBitmap(bitmap);
-                    String path = android.os.Environment.getExternalStorageDirectory()
-                            + File.separator
-                            + "Phoenix" + File.separator + "default";
+                    //String path = android.os.Environment.getExternalStorageDirectory()
+                    String path = getContext().getExternalFilesDir();
+//                            + File.separator
+//                            + "Phoenix" + File.separator + "default";
                     f.delete();
                     OutputStream outFile = null;
                     File file = new File ( path, String.valueOf(System.currentTimeMillis())+ ".jpg");
@@ -228,18 +253,32 @@ public class AddItemToWishlistFragment extends Fragment {
         final String email = auth.getCurrentUser().getEmail();
         DocumentReference docRef = database.collection("MeineWunschliste").document(email);
 
-        addToList.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                EditText oldPasswordEdit = (EditText) getView().findViewById(R.id.insProductName);
-                EditText newPasswordEdit = (EditText) getView().findViewById(R.id.insProductDescription);
-                EditText newNameEdit = (EditText) getView().findViewById(R.id.);
+        pushProductName = (EditText) getView().findViewById(R.id.insProductName);
+        pushProductDescription = (EditText) getView().findViewById(R.id.insProductDescription);
 
-                String oldPasswordStr = oldPasswordEdit.getText().toString();
-                String newPasswordStr = newPasswordEdit.getText().toString();
-                String newNameStr = newNameEdit.getText().toString();
+        //After finishing selectImage() implementation, change to R.id.insProductImage and implement Base64 convert!!
+        pushProductPicture = (EditText) getView().findViewById(R.id.insProductDescription);
+
+
+                MyWishListItem pushNewItem = new MyWishListItem(pushProductName.getText().toString(), pushProductDescription.getText().toString(), pushProductPicture.getText().toString());
+                docRef.set(pushNewItem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(getActivity().getApplicationContext(),"Done", Toast.LENGTH_LONG).show();
+
+                            NavHostFragment.findNavController(AddItemToWishlistFragment.this)
+                                    .navigate(R.id.action_addItemToWishlist_to_fragment_meineWunschliste);
+
+                        }
+                        else{
+                            Toast.makeText(getActivity().getApplicationContext(), "Not working",  Toast.LENGTH_LONG).show();
+
+                        }
+
+                    }
+                });
     }
+
 
 }
