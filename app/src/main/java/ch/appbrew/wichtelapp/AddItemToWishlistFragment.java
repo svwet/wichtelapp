@@ -212,19 +212,10 @@ public class AddItemToWishlistFragment extends Fragment {
                     f.delete();
                     OutputStream outFile = null;
                     File file = new File ( path, String.valueOf(System.currentTimeMillis())+ ".jpg");
-                    try {
                         outFile = new FileOutputStream(file);
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
                         outFile.flush();
                         outFile.close();
-
-                    } catch (FileNotFoundException e){
-                        e.printStackTrace();
-                    } catch (IOException e){
-                        e.printStackTrace();
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
                 } catch (Exception e){
                     e.printStackTrace();
                 }
