@@ -205,10 +205,10 @@ public class AddItemToWishlistFragment extends Fragment {
                     BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                     bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
                     viewImage.setImageBitmap(bitmap);
-                    //String path = android.os.Environment.getExternalStorageDirectory()
-                    String path = getContext().getExternalFilesDir();
-//                            + File.separator
-//                            + "Phoenix" + File.separator + "default";
+                    String path = android.os.Environment.getExternalStorageDirectory()
+
+                            + File.separator
+                            + "Phoenix" + File.separator + "default";
                     f.delete();
                     OutputStream outFile = null;
                     File file = new File ( path, String.valueOf(System.currentTimeMillis())+ ".jpg");
