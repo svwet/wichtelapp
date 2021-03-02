@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +35,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -47,7 +50,7 @@ import static android.app.Activity.RESULT_OK;
  */
 public class AddItemToWishlistFragment extends Fragment {
 
-    private ArrayList<MyWishListItem>addItem;
+    private ArrayList<MyWishListItem> addItem;
 
 
     private EditText editProductName;
@@ -69,7 +72,7 @@ public class AddItemToWishlistFragment extends Fragment {
 
     private EditText pushProductName;
     private EditText pushProductDescription;
-    private EditText pushProductPicture;
+    private ImageView pushProductPicture;
 
     private FirebaseAuth auth;
     private FirebaseFirestore database;
@@ -117,13 +120,13 @@ public class AddItemToWishlistFragment extends Fragment {
         return view;
     }
 
-    public void setButton (View view){
+    public void setButton(View view) {
         addToList = view.findViewById(R.id.btnInsertPic);
         addSnap = view.findViewById(R.id.btnTakeSnap);
 
-        addSnap.setOnClickListener(new View.OnClickListener(){
+        addSnap.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 selectImage();
             }
 
@@ -137,35 +140,26 @@ public class AddItemToWishlistFragment extends Fragment {
         });
 
 
-
     }
 
 
-
-
-
-
-
-
-
-
-    public boolean onCreateOptionMenu(Menu menu){
+    public boolean onCreateOptionMenu(Menu menu) {
 
         getActivity().getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
-    private void selectImage(){
+    private void selectImage() {
 
-        viewImage=(ImageView) getView().findViewById(R.id.viewImage);
+        viewImage = (ImageView) getView().findViewById(R.id.viewImage);
 
-        final CharSequence[] options = { "Take Photo", "Choose from Gallery", "Cancel"};
+        final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add Photo");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo")){
+                if (options[item].equals("Take Photo")) {
                     Uri imageUri;
                     ContentValues values = new ContentValues();
                     values.put(MediaStore.Images.Media.TITLE, "New Picture");
@@ -174,68 +168,64 @@ public class AddItemToWishlistFragment extends Fragment {
                     Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                     startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE);
-                }
-                else if(options[item].equals("Choose from Gallery")){
-                    Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                } else if (options[item].equals("Choose from Gallery")) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 2);
-                }
-                else if(options[item].equals("Cancel")){
+                } else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
             }
         });
         builder.show();
     }
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RESULT_OK){
-            if (requestCode == 1){
-                File f = new File(Environment.getExternalStorageDirectory().toString());
-                for(File temp : f.listFiles()){
-                    if (temp.getName().equals("temp.jpg")){
-                        f = temp;
-                        break;
-                    }
+        if (requestCode == 1001) {
+            File f = new File(Environment.getExternalStorageDirectory().toString());
+            for (File temp : f.listFiles()) {
+                if (temp.getName().equals("temp.jpg")) {
+                    f = temp;
+                    break;
                 }
-                try {
-                    Bitmap bitmap;
-                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
-                    viewImage.setImageBitmap(bitmap);
-                    String path = android.os.Environment.getExternalStorageDirectory()
-
-                            + File.separator
-                            + "Phoenix" + File.separator + "default";
-                    f.delete();
-                    OutputStream outFile = null;
-                    File file = new File ( path, String.valueOf(System.currentTimeMillis())+ ".jpg");
-                        outFile = new FileOutputStream(file);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
-                        outFile.flush();
-                        outFile.close();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-
             }
-            else if(requestCode == 2){
-                Uri selectImage = data.getData();
-                String[] filePath = {MediaStore.Images.Media.DATA};
-                Cursor c = getActivity().getContentResolver().query(selectImage,filePath, null, null, null);
-                c.moveToFirst();
-                int columnIndex = c.getColumnIndex(filePath[0]);
-                String picturePath = c.getString(columnIndex);
-                c.close();
-                Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-                Log.w("path of image from gallery......******************.........",picturePath + "");
-                viewImage.setImageBitmap(thumbnail);
+            try {
+                BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+                bitmapOptions.inSampleSize = 2;
+                Bitmap bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
+                viewImage.setImageBitmap(bitmap);
+                String path = android.os.Environment.getExternalStorageDirectory()
 
+                        + File.separator
+                        + "Phoenix" + File.separator + "default";
+                f.delete();
+                OutputStream outFile = null;
+                File file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
+                outFile = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
+                outFile.flush();
+                outFile.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        } else if (requestCode == 2) {
+            BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+            bitmapOptions.inSampleSize = 2;
+            Uri selectImage = data.getData();
+            String[] filePath = {MediaStore.Images.Media.DATA};
+            Cursor c = getActivity().getContentResolver().query(selectImage, filePath, null, null, null);
+            c.moveToFirst();
+            int columnIndex = c.getColumnIndex(filePath[0]);
+            String picturePath = c.getString(columnIndex);
+            c.close();
+            Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath, bitmapOptions));
+            Log.w("path of image from gallery......******************.........", picturePath + "");
+            viewImage.setImageBitmap(thumbnail);
         }
     }
 
-    public void pushFirebase(){
+    public void pushFirebase() {
         auth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance();
         auth.getCurrentUser();
@@ -246,27 +236,31 @@ public class AddItemToWishlistFragment extends Fragment {
         pushProductDescription = (EditText) getView().findViewById(R.id.insProductDescription);
 
         //After finishing selectImage() implementation, change to R.id.insProductImage and implement Base64 convert!!
-        pushProductPicture = (EditText) getView().findViewById(R.id.insProductDescription);
+        pushProductPicture =  (ImageView) getView().findViewById(R.id.viewImage);
+        Bitmap bitmap = ((BitmapDrawable)pushProductPicture.getDrawable()).getBitmap();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream .toByteArray();
+        String encodedPicture = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
 
-                MyWishListItem pushNewItem = new MyWishListItem(pushProductName.getText().toString(), pushProductDescription.getText().toString(), pushProductPicture.getText().toString());
-                docRef.set(pushNewItem).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(getActivity().getApplicationContext(),"Done", Toast.LENGTH_LONG).show();
+        MyWishListItem pushNewItem = new MyWishListItem( encodedPicture, pushProductName.getText().toString(), pushProductDescription.getText().toString());
+        docRef.set(pushNewItem).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
 
-                            NavHostFragment.findNavController(AddItemToWishlistFragment.this)
-                                    .navigate(R.id.action_addItemToWishlist_to_fragment_meineWunschliste);
+                    NavHostFragment.findNavController(AddItemToWishlistFragment.this)
+                            .navigate(R.id.action_addItemToWishlist_to_fragment_meineWunschliste);
 
-                        }
-                        else{
-                            Toast.makeText(getActivity().getApplicationContext(), "Not working",  Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "Not working", Toast.LENGTH_LONG).show();
 
-                        }
+                }
 
-                    }
-                });
+            }
+        });
     }
 
 
