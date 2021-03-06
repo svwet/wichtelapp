@@ -49,7 +49,6 @@ public class MyWishlistFragment extends Fragment {
     private FirestoreRecyclerAdapter fAdapter;
 
 
-
     private String mParam1;
     private String mParam2;
 
@@ -95,7 +94,8 @@ public class MyWishlistFragment extends Fragment {
         setButtons(view);
         return view;
     }
-//    public void insertItem(int position) {
+
+    //    public void insertItem(int position) {
 //        myWishList.add(position, new MyWishListItem(R.drawable.ic_user, "New Item At Position" + position, "This is Line 2"));
 //        mAdapter.notifyItemInserted(position);
 //    }
@@ -103,16 +103,18 @@ public class MyWishlistFragment extends Fragment {
         myWishList.remove(position);
         mAdapter.notifyItemRemoved(position);
     }
+
     public void changeItem(int position, String text) {
         myWishList.get(position).changeProductName(text);
         mAdapter.notifyItemChanged(position);
     }
+
     public void createExampleList() {
         myWishList = new ArrayList<>();
 
     }
 
-    private void setUpRecyclerView(View view){
+    private void setUpRecyclerView(View view) {
         auth = FirebaseAuth.getInstance();
         auth.getCurrentUser();
         final String email = auth.getCurrentUser().getEmail();
@@ -121,7 +123,7 @@ public class MyWishlistFragment extends Fragment {
 
         Query query = wishListRef;
         FirestoreRecyclerOptions<MyWishListItem> options = new FirestoreRecyclerOptions.Builder<MyWishListItem>()
-                .setQuery(query,MyWishListItem.class)
+                .setQuery(query, MyWishListItem.class)
                 .build();
 
         mAdapter = new MyWishListAdapter(options);
@@ -129,7 +131,9 @@ public class MyWishlistFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
+
 
     }
 
@@ -145,30 +149,29 @@ public class MyWishlistFragment extends Fragment {
         mAdapter.stopListening();
     }
 
-        public void setButtons (View view){
-            buttonInsert = view.findViewById(R.id.button_insert);
-            buttonInsert.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    NavHostFragment.findNavController(MyWishlistFragment.this)
-                            .navigate(R.id.action_fragment_meineWunschliste_to_addItemToWishlist);
-                }
-            });
+    public void setButtons(View view) {
+        buttonInsert = view.findViewById(R.id.button_insert);
+        buttonInsert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(MyWishlistFragment.this)
+                        .navigate(R.id.action_fragment_meineWunschliste_to_addItemToWishlist);
+            }
+        });
+    }
+
+    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
         }
 
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            mAdapter.deleteItem(viewHolder.getAdapterPosition());
 
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                myWishList.remove(viewHolder.getAdapterPosition());
-                mAdapter.notifyDataSetChanged();
+        }
+    };
 
-            }
-        };
-
-    }
+}
 

@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 
-
 public class MyWishListAdapter extends FirestoreRecyclerAdapter<MyWishListItem, MyWishListAdapter.WishHolder> {
 
     public MyWishListAdapter(@NonNull FirestoreRecyclerOptions<MyWishListItem> options) {
@@ -37,7 +36,7 @@ public class MyWishListAdapter extends FirestoreRecyclerAdapter<MyWishListItem, 
         byte[] imageBytes = myWishListItem.getProductImage().getBytes();
         Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
 
-        YuvImage yuvimage=new YuvImage(imageBytes, ImageFormat.NV21, 100, 100, null);
+        YuvImage yuvimage = new YuvImage(imageBytes, ImageFormat.NV21, 100, 100, null);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         yuvimage.compressToJpeg(new Rect(0, 0, 100, 100), 80, baos);
         byte[] jdata = baos.toByteArray();
@@ -55,10 +54,14 @@ public class MyWishListAdapter extends FirestoreRecyclerAdapter<MyWishListItem, 
     public WishHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.mywishlist_item,
                 parent, false);
-        return new WishHolder(v) ;
+        return new WishHolder(v);
     }
 
-    public class WishHolder extends RecyclerView.ViewHolder{
+    public void deleteItem(int position) {
+        getSnapshots().getSnapshot(position).getReference().delete();
+    }
+
+    public class WishHolder extends RecyclerView.ViewHolder {
 
         private ImageView productImage;
         private TextView productName;
