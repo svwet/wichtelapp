@@ -33,8 +33,12 @@
     <fragment
         android:id="@+id/fragment_meineWunschliste"
         android:name="ch.appbrew.wichtelapp.MyWishlistFragment"
-        android:label="Meine Wunschliste"
-        tools:layout="@layout/fragment_meine_wunschliste" />
+        android:label="My wish list"
+        tools:layout="@layout/fragment_meine_wunschliste" >
+        <action
+            android:id="@+id/action_fragment_meineWunschliste_to_addItemToWishlist"
+            app:destination="@id/addItemToWishlist" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_wichtelwunschliste"
         android:name="ch.appbrew.wichtelapp.WichtelWishlistFragment"
@@ -45,4 +49,13 @@
         android:name="ch.appbrew.wichtelapp.UsersettingFragment"
         android:label="Benutzereinstellung"
         tools:layout="@layout/fragment_benutzereinstellung" />
+    <fragment
+        android:id="@+id/addItemToWishlist"
+        android:name="ch.appbrew.wichtelapp.AddItemToWishlistFragment"
+        android:label="fragment_add_item_to_wishlist"
+        tools:layout="@layout/fragment_add_item_to_wishlist" >
+        <action
+            android:id="@+id/action_addItemToWishlist_to_fragment_meineWunschliste"
+            app:destination="@id/fragment_meineWunschliste" />
+    </fragment>
 </navigation>
