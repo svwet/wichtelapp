@@ -2,10 +2,6 @@ package ch.appbrew.wichtelapp;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ImageFormat;
-import android.graphics.Rect;
-import android.graphics.YuvImage;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
+import java.util.Base64;
 
+import ch.appbrew.wichtelapp.utils.ByteUtil;
 
 public class MyWishListAdapter extends FirestoreRecyclerAdapter<MyWishListItem, MyWishListAdapter.WishHolder> {
 
@@ -31,22 +26,15 @@ public class MyWishListAdapter extends FirestoreRecyclerAdapter<MyWishListItem, 
 
     @Override
     protected void onBindViewHolder(@NonNull WishHolder wishHolder, int i, @NonNull MyWishListItem myWishListItem) {
+        String encodedString = myWishListItem.getProductImage();
+        byte[] compressed = Base64.getDecoder().decode(encodedString);
+        byte[] decompressed = ByteUtil.decompress(compressed);
+        Bitmap decodedImage = BitmapFactory.decodeByteArray(decompressed, 0, decompressed.length);
 
-
-        byte[] imageBytes = myWishListItem.getProductImage().getBytes();
-        Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-
-        YuvImage yuvimage = new YuvImage(imageBytes, ImageFormat.NV21, 100, 100, null);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        yuvimage.compressToJpeg(new Rect(0, 0, 100, 100), 80, baos);
-        byte[] jdata = baos.toByteArray();
-
-        // Convert to Bitmap
-        Bitmap bmp = BitmapFactory.decodeByteArray(jdata, 0, jdata.length);
-
-        wishHolder.productImage.setImageBitmap(bmp);
+        wishHolder.productImage.setImageBitmap(decodedImage);
         wishHolder.productName.setText(myWishListItem.getProductName());
         wishHolder.productDescription.setText(myWishListItem.getProductDescription());
+
     }
 
     @NonNull
@@ -76,13 +64,6 @@ public class MyWishListAdapter extends FirestoreRecyclerAdapter<MyWishListItem, 
         }
     }
 }
-
-
-
-
-
-
-
 
 /*
 public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.MyWishListViewHolder> {

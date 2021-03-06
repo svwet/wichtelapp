@@ -17,7 +17,6 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,8 +40,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 
-import static android.app.Activity.RESULT_OK;
+import ch.appbrew.wichtelapp.utils.ByteUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +59,6 @@ public class AddItemToWishlistFragment extends Fragment {
     private int IMAGE_CAPTURE_CODE = 1001;
 
     // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -130,7 +129,6 @@ public class AddItemToWishlistFragment extends Fragment {
             public void onClick(View v) {
                 selectImage();
             }
-
         });
         addToList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,8 +137,6 @@ public class AddItemToWishlistFragment extends Fragment {
 
             }
         });
-
-
     }
 
 
@@ -192,7 +188,6 @@ public class AddItemToWishlistFragment extends Fragment {
                         break;
                     }
                 }
-
                 BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                 bitmapOptions.inSampleSize = 2;
                 Bitmap bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
@@ -238,33 +233,28 @@ public class AddItemToWishlistFragment extends Fragment {
 
         pushProductName = (EditText) getView().findViewById(R.id.insProductName);
         pushProductDescription = (EditText) getView().findViewById(R.id.insProductDescription);
-
-
         pushProductPicture = (ImageView) getView().findViewById(R.id.viewImage);
+
         Bitmap bitmap = ((BitmapDrawable) pushProductPicture.getDrawable()).getBitmap();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
-        String encodedPicture = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        byte[] compressed = ByteUtil.compress(byteArray);
+        String EncodedString = Base64.getEncoder().encodeToString(compressed);
 
-        MyWishListItem pushNewItem = new MyWishListItem(byteArray.toString(), pushProductName.getText().toString(), pushProductDescription.getText().toString());
+
+        MyWishListItem pushNewItem = new MyWishListItem(EncodedString, pushProductName.getText().toString(), pushProductDescription.getText().toString());
         docRef.set(pushNewItem).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(getActivity().getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
-
                     NavHostFragment.findNavController(AddItemToWishlistFragment.this)
                             .navigate(R.id.action_addItemToWishlist_to_fragment_meineWunschliste);
-
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "Not working", Toast.LENGTH_LONG).show();
-
                 }
-
             }
         });
     }
-
-
 }
