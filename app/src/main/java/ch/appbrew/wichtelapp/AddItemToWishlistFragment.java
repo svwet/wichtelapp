@@ -234,7 +234,7 @@ public class AddItemToWishlistFragment extends Fragment {
         auth.getCurrentUser();
 
         final String email = auth.getCurrentUser().getEmail();
-        DocumentReference docRef = database.collection("MeineWunschliste").document(email);
+        DocumentReference docRef = database.collection("MeineWunschliste").document(email).collection("Liste").document();
 
         pushProductName = (EditText) getView().findViewById(R.id.insProductName);
         pushProductDescription = (EditText) getView().findViewById(R.id.insProductDescription);

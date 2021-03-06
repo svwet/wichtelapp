@@ -47,7 +47,7 @@ public class MyWishlistFragment extends Fragment {
     private FirebaseAuth auth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirestoreRecyclerAdapter fAdapter;
-    private CollectionReference wishListRef = db.collection("MeineWunschliste");
+
 
 
     private String mParam1;
@@ -116,6 +116,8 @@ public class MyWishlistFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         auth.getCurrentUser();
         final String email = auth.getCurrentUser().getEmail();
+
+        CollectionReference wishListRef = db.collection("MeineWunschliste").document(email).collection("Liste");
 
         Query query = wishListRef;
         FirestoreRecyclerOptions<MyWishListItem> options = new FirestoreRecyclerOptions.Builder<MyWishListItem>()
