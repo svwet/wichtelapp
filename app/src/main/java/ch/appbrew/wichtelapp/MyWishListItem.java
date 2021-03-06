@@ -15,6 +15,7 @@ public class MyWishListItem {
         productName = name;
         productDescription = description;
     }
+
     public void changeProductName(String name){
         productName = name;
     }

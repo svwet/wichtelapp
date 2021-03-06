@@ -34,7 +34,6 @@ public class MyWishListAdapter extends FirestoreRecyclerAdapter<MyWishListItem, 
         wishHolder.productImage.setImageBitmap(decodedImage);
         wishHolder.productName.setText(myWishListItem.getProductName());
         wishHolder.productDescription.setText(myWishListItem.getProductDescription());
-
     }
 
     @NonNull
@@ -50,79 +49,15 @@ public class MyWishListAdapter extends FirestoreRecyclerAdapter<MyWishListItem, 
     }
 
     public class WishHolder extends RecyclerView.ViewHolder {
-
         private ImageView productImage;
         private TextView productName;
         private TextView productDescription;
 
         public WishHolder(@NonNull View itemView) {
             super(itemView);
-
             productImage = itemView.findViewById(R.id.productImage);
             productName = itemView.findViewById(R.id.productName);
             productDescription = itemView.findViewById(R.id.productDescription);
         }
     }
 }
-
-/*
-public class MyWishListAdapter extends RecyclerView.Adapter<MyWishListAdapter.MyWishListViewHolder> {
-    private ArrayList<MyWishListItem> myWishList;
-    private OnItemClickListener mListener;
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-        void onDeleteClick(int position);
-    }
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        mListener = listener;
-    }
-    public static class MyWishListViewHolder extends RecyclerView.ViewHolder {
-        public TextView productImage;
-        public TextView productName;
-        public TextView productDescription;
-        //public ImageView mDeleteImage;
-        public MyWishListViewHolder(View itemView, final OnItemClickListener listener) {
-            super(itemView);
-            productImage = itemView.findViewById(R.id.productImage);
-            productName = itemView.findViewById(R.id.productName);
-            productDescription = itemView.findViewById(R.id.productDescription);
-            //mDeleteImage = itemView.findViewById(R.id.image_delete);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
-                        }
-                    }
-                }
-            });
-
-        }
-    }
-    public MyWishListAdapter(ArrayList<MyWishListItem> exampleList) {
-        myWishList = exampleList;
-    }
-    @Override
-    public MyWishListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.mywishlist_item, parent, false);
-        MyWishListViewHolder evh = new MyWishListViewHolder(v, mListener);
-        return evh;
-    }
-    //Holds the WishList Item
-    @Override
-    public void onBindViewHolder(MyWishListViewHolder holder, int position) {
-        MyWishListItem currentItem = myWishList.get(position);
-        holder.productImage.setText(currentItem.getProductImage());
-        holder.productName.setText(currentItem.getProductName());
-        holder.productDescription.setText(currentItem.getProductDescription());
-    }
-    @Override
-    public int getItemCount() {
-        return myWishList.size();
-    }
-
-
-
-}*/

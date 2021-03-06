@@ -53,7 +53,6 @@ public class AddItemToWishlistFragment extends Fragment {
 
     private ArrayList<MyWishListItem> addItem;
 
-
     private EditText editProductName;
     private EditText editProductDescr;
     private int IMAGE_CAPTURE_CODE = 1001;
@@ -111,12 +110,9 @@ public class AddItemToWishlistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_item_to_wishlist,
                 container, false);
-
         setButton(view);
-
         return view;
     }
 
@@ -147,9 +143,7 @@ public class AddItemToWishlistFragment extends Fragment {
     }
 
     private void selectImage() {
-
         viewImage = (ImageView) getView().findViewById(R.id.viewImage);
-
         final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add Photo");
@@ -183,7 +177,7 @@ public class AddItemToWishlistFragment extends Fragment {
             if (requestCode == 1001) {
                 File f = new File(Environment.getExternalStorageDirectory().toString());
                 for (File temp : f.listFiles()) {
-                    if (temp.getName().equals("temp.jpg")) {
+                    if (temp.getName().equals("Pictures")) {
                         f = temp;
                         break;
                     }
