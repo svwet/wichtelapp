@@ -6,6 +6,9 @@ public class MyWishListItem {
     private String productName;
     private String productDescription;
 
+    public MyWishListItem(){
+
+    }
 
     public MyWishListItem(String image, String name, String description){
         productImage = image;

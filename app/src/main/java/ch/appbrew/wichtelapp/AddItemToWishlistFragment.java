@@ -38,6 +38,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
@@ -182,15 +183,16 @@ public class AddItemToWishlistFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1001) {
-            File f = new File(Environment.getExternalStorageDirectory().toString());
-            for (File temp : f.listFiles()) {
-                if (temp.getName().equals("temp.jpg")) {
-                    f = temp;
-                    break;
+        try {
+            if (requestCode == 1001) {
+                File f = new File(Environment.getExternalStorageDirectory().toString());
+                for (File temp : f.listFiles()) {
+                    if (temp.getName().equals("temp.jpg")) {
+                        f = temp;
+                        break;
+                    }
                 }
-            }
-            try {
+
                 BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                 bitmapOptions.inSampleSize = 2;
                 Bitmap bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
@@ -206,22 +208,23 @@ public class AddItemToWishlistFragment extends Fragment {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
                 outFile.flush();
                 outFile.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else if (requestCode == 2) {
+                BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+                bitmapOptions.inSampleSize = 2;
+                Uri selectImage = data.getData();
+                String[] filePath = {MediaStore.Images.Media.DATA};
+                Cursor c = getActivity().getContentResolver().query(selectImage, filePath, null, null, null);
+                c.moveToFirst();
+                int columnIndex = c.getColumnIndex(filePath[0]);
+                String picturePath = c.getString(columnIndex);
+                c.close();
+                InputStream is = getActivity().getContentResolver().openInputStream(data.getData());
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                Log.w("path of image from gallery......******************.........", picturePath + "");
+                viewImage.setImageBitmap(bitmap);
             }
-        } else if (requestCode == 2) {
-            BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-            bitmapOptions.inSampleSize = 2;
-            Uri selectImage = data.getData();
-            String[] filePath = {MediaStore.Images.Media.DATA};
-            Cursor c = getActivity().getContentResolver().query(selectImage, filePath, null, null, null);
-            c.moveToFirst();
-            int columnIndex = c.getColumnIndex(filePath[0]);
-            String picturePath = c.getString(columnIndex);
-            c.close();
-            Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath, bitmapOptions));
-            Log.w("path of image from gallery......******************.........", picturePath + "");
-            viewImage.setImageBitmap(thumbnail);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -229,22 +232,22 @@ public class AddItemToWishlistFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance();
         auth.getCurrentUser();
+
         final String email = auth.getCurrentUser().getEmail();
         DocumentReference docRef = database.collection("MeineWunschliste").document(email);
 
         pushProductName = (EditText) getView().findViewById(R.id.insProductName);
         pushProductDescription = (EditText) getView().findViewById(R.id.insProductDescription);
 
-        //After finishing selectImage() implementation, change to R.id.insProductImage and implement Base64 convert!!
-        pushProductPicture =  (ImageView) getView().findViewById(R.id.viewImage);
-        Bitmap bitmap = ((BitmapDrawable)pushProductPicture.getDrawable()).getBitmap();
+
+        pushProductPicture = (ImageView) getView().findViewById(R.id.viewImage);
+        Bitmap bitmap = ((BitmapDrawable) pushProductPicture.getDrawable()).getBitmap();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream .toByteArray();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
         String encodedPicture = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-
-        MyWishListItem pushNewItem = new MyWishListItem( encodedPicture, pushProductName.getText().toString(), pushProductDescription.getText().toString());
+        MyWishListItem pushNewItem = new MyWishListItem(byteArray.toString(), pushProductName.getText().toString(), pushProductDescription.getText().toString());
         docRef.set(pushNewItem).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
