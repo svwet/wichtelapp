@@ -95,10 +95,6 @@ public class MyWishlistFragment extends Fragment {
         return view;
     }
 
-    //    public void insertItem(int position) {
-//        myWishList.add(position, new MyWishListItem(R.drawable.ic_user, "New Item At Position" + position, "This is Line 2"));
-//        mAdapter.notifyItemInserted(position);
-//    }
     public void removeItem(int position) {
         myWishList.remove(position);
         mAdapter.notifyItemRemoved(position);

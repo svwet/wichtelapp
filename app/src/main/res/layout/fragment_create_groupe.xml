@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateGroupeFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:text="Gruppe erstellen"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editGroupName"
+        android:layout_width="246dp"
+        android:layout_height="51dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+
+        android:hint="Gruppenname"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+    <EditText
+
+        android:id="@+id/editInvite"
+        android:layout_width="248dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:drawableEnd="@drawable/ic_group"
+        android:hint="@string/Emailadresse"
+        android:inputType="text"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editGroupName" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnInvitePerson"
+        android:layout_width="41dp"
+        android:layout_height="38dp"
+
+        android:layout_marginStart="8dp"
+        android:backgroundTint="@color/design_default_color_primary"
+        android:src="@drawable/ic_add_user_grp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/editInvite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/editInvite" />
+
+    <Button
+        android:id="@+id/btnRndWichtel"
+        android:layout_width="241dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="32dp"
+        android:text="Wichtel auslosen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editInvite" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/inviteRecycler"
+        android:layout_width="409dp"
+        android:layout_height="413dp"
+        android:layout_marginTop="20dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnRndWichtel"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnCreateGrp"
+        android:layout_width="62dp"
+        android:layout_height="56dp"
+
+        android:layout_gravity="end|right"
+        android:layout_marginEnd="44dp"
+        android:layout_marginBottom="48dp"
+        android:backgroundTint="@color/design_default_color_primary"
+        android:src="@drawable/ic_done"
+        app:fabSize="auto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

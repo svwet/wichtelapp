@@ -3,20 +3,17 @@ package ch.appbrew.wichtelapp;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link GroupFragment#newInstance} factory method to
+ * Use the {@link CreateGroupeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GroupFragment extends Fragment {
+public class CreateGroupeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,7 +24,7 @@ public class GroupFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public GroupFragment() {
+    public CreateGroupeFragment() {
         // Required empty public constructor
     }
 
@@ -37,11 +34,11 @@ public class GroupFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment GruppenFragment.
+     * @return A new instance of fragment CreateGroupeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GroupFragment newInstance(String param1, String param2) {
-        GroupFragment fragment = new GroupFragment();
+    public static CreateGroupeFragment newInstance(String param1, String param2) {
+        CreateGroupeFragment fragment = new CreateGroupeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -62,24 +59,6 @@ public class GroupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        View view = inflater.inflate(R.layout.fragment_gruppen,
-                container, false);
-        setButtons(view);
-        return view;
-    }
-
-    public void setButtons(View view){
-        FloatingActionButton btnAddGroup = getActivity().findViewById(R.id.btnAddGrp);
-
-
-        view.findViewById(R.id.btnAddGrp).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(GroupFragment.this)
-                        .navigate(R.id.action_fragment_gruppen_to_createGroupeFragment);
-            }
-        });
-
+        return inflater.inflate(R.layout.fragment_create_groupe, container, false);
     }
 }

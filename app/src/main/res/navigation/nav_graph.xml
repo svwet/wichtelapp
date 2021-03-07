@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/FirstFragment"
         android:name="ch.appbrew.wichtelapp.FirstFragment"
-        android:label="@string/first_fragment_label"
+        android:label="Gruppen verwalten"
         tools:layout="@layout/fragment_first">
 
         <action
@@ -29,7 +29,11 @@
         android:id="@+id/fragment_gruppen"
         android:name="ch.appbrew.wichtelapp.GroupFragment"
         android:label="Gruppen"
-        tools:layout="@layout/fragment_gruppen" />
+        tools:layout="@layout/fragment_gruppen" >
+        <action
+            android:id="@+id/action_fragment_gruppen_to_createGroupeFragment"
+            app:destination="@id/createGroupeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_meineWunschliste"
         android:name="ch.appbrew.wichtelapp.MyWishlistFragment"
@@ -58,4 +62,9 @@
             android:id="@+id/action_addItemToWishlist_to_fragment_meineWunschliste"
             app:destination="@id/fragment_meineWunschliste" />
     </fragment>
+    <fragment
+        android:id="@+id/createGroupeFragment"
+        android:name="ch.appbrew.wichtelapp.CreateGroupeFragment"
+        android:label="fragment_create_groupe"
+        tools:layout="@layout/fragment_create_groupe" />
 </navigation>
