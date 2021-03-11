@@ -12,17 +12,16 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 
-public class CreateGroupAdapter extends FirestoreRecyclerAdapter<ModelCreateGroup, CreateGroupAdapter.GroupHolder> {
+public class GroupAdapter extends FirestoreRecyclerAdapter<ModelGroup, GroupAdapter.GroupHolder> {
 
-    public CreateGroupAdapter(@NonNull FirestoreRecyclerOptions<ModelCreateGroup> options) {
+    public GroupAdapter(@NonNull FirestoreRecyclerOptions<ModelGroup> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull GroupHolder groupHolder, int i, @NonNull ModelCreateGroup modelCreateGroupe) {
+    protected void onBindViewHolder(@NonNull GroupHolder groupHolder, int i, @NonNull ModelGroup modelGroup) {
 
-        groupHolder.benutzer.setText(modelCreateGroupe.getBenutzer());
-        groupHolder.name.setText(modelCreateGroupe.getName());
+        groupHolder.name.setText(modelGroup.getName());
 
 
     }
@@ -30,7 +29,7 @@ public class CreateGroupAdapter extends FirestoreRecyclerAdapter<ModelCreateGrou
     @NonNull
     @Override
     public GroupHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.model_create_groupe,
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.model_group,
                 parent, false);
         return new GroupHolder(view);
     }
@@ -41,15 +40,10 @@ public class CreateGroupAdapter extends FirestoreRecyclerAdapter<ModelCreateGrou
 
     public class GroupHolder extends RecyclerView.ViewHolder {
 
-        private TextView benutzer;
         private TextView name;
-
-
         public GroupHolder(@NonNull View itemView) {
             super(itemView);
-
-            benutzer = itemView.findViewById(R.id.createGroupeBenutzer);
-            name = itemView.findViewById(R.id.createGroupName);
+            name = itemView.findViewById(R.id.groupName);
         }
     }
 }

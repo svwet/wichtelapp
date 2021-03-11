@@ -193,25 +193,46 @@ public class CreateGroupFragment extends Fragment {
         auth.getCurrentUser();
         final String email = auth.getCurrentUser().getEmail();
 
-        //editGroupeName = (EditText) getView().findViewById(R.id.editGroupeName);
-
-        CollectionReference groupListRef = db.collection("Gruppen").document(email).collection("Test");
-
+        String groupName = "group123456789!";
+        if (getView() != null) {
+            editGroupName = (EditText) getView().findViewById(R.id.editGroupeName);
+            groupName = editGroupName.getText().toString();
+        }
+        CollectionReference groupListRef = db.collection("Gruppen").document(email).collection(groupName);
         Query query = groupListRef;
         FirestoreRecyclerOptions<ModelCreateGroup> options = new FirestoreRecyclerOptions.Builder<ModelCreateGroup>()
                 .setQuery(query, ModelCreateGroup.class)
                 .build();
-
         mAdapter = new CreateGroupAdapter(options);
-
         mRecyclerView = view.findViewById(R.id.inviteRecycler);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+    }
 
+    public void updateAdapter(){
+        auth = FirebaseAuth.getInstance();
+        auth.getCurrentUser();
+        final String email = auth.getCurrentUser().getEmail();
 
+        String groupName = "group123456789!";
+        if (getView() != null) {
+            editGroupName = (EditText) getView().findViewById(R.id.editGroupeName);
+            groupName = editGroupName.getText().toString();
+        }
+        CollectionReference groupListRef = db.collection("Gruppen").document(email).collection(groupName);
+        Query query = groupListRef;
+        FirestoreRecyclerOptions<ModelCreateGroup> options = new FirestoreRecyclerOptions.Builder<ModelCreateGroup>()
+                .setQuery(query, ModelCreateGroup.class)
+                .build();
+        mAdapter.stopListening();
+        mAdapter = new CreateGroupAdapter(options);
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.startListening();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -251,7 +272,6 @@ public class CreateGroupFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         auth.getCurrentUser();
 
-
         final String email = auth.getCurrentUser().getEmail();
 
         DocumentReference docRef = db.collection("Gruppen").document(email).collection(editGroupName.getText().toString()).document(editInvitePerson.getText().toString());
@@ -282,6 +302,7 @@ public class CreateGroupFragment extends Fragment {
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(getActivity().getApplicationContext(), "Freund hinzugefügt", Toast.LENGTH_LONG).show();
+                                                    updateAdapter();
                                                 } else {
                                                     Toast.makeText(getActivity().getApplicationContext(), "Nicht hinzugefügt", Toast.LENGTH_LONG).show();
                                                 }
