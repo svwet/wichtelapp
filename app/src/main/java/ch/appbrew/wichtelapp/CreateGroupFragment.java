@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,32 +25,32 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.util.ArrayList;
 
-
-
+import static android.content.ContentValues.TAG;
 
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CreateGroupeFragment#newInstance} factory method to
+ * Use the {@link CreateGroupFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateGroupeFragment extends Fragment {
+public class CreateGroupFragment extends Fragment {
 
-    private ArrayList<ModelCreateGroupe> modelGroup;
+    private ArrayList<ModelCreateGroup> modelGroup;
     private RecyclerView mRecyclerView;
-    private CreateGroupeAdapter mAdapter;
+    private CreateGroupAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
 
-    private EditText editGroupeName;
+    private EditText editGroupName;
     private EditText editInvitePerson;
 
 
@@ -67,7 +68,7 @@ public class CreateGroupeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public CreateGroupeFragment() {
+    public CreateGroupFragment() {
         // Required empty public constructor
     }
 
@@ -80,8 +81,8 @@ public class CreateGroupeFragment extends Fragment {
      * @return A new instance of fragment CreateGroupeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CreateGroupeFragment newInstance(String param1, String param2) {
-        CreateGroupeFragment fragment = new CreateGroupeFragment();
+    public static CreateGroupFragment newInstance(String param1, String param2) {
+        CreateGroupFragment fragment = new CreateGroupFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -147,7 +148,7 @@ public class CreateGroupeFragment extends Fragment {
 
     //Check for existing Users!
     private void checkInvitePerson(View view) {
-        editGroupeName = (EditText) getView().findViewById(R.id.editGroupeName);
+        editGroupName = (EditText) getView().findViewById(R.id.editGroupeName);
         editInvitePerson = (EditText) getView().findViewById(R.id.editInvitePerson);
 
         auth = FirebaseAuth.getInstance();
@@ -165,18 +166,23 @@ public class CreateGroupeFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
                 if (task.isSuccessful()) {
+                    QuerySnapshot snapshot = task.getResult();
+                    if (snapshot.getDocuments().size() > 0) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Freund hinzugefügt", Toast.LENGTH_LONG).show();
+                        addToGroupe();
 
-                    for (QueryDocumentSnapshot d : task.getResult()) {
-                        if (d.exists()) {
-                            //addToGroupe();
-                        }
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "Freund nicht registriert", Toast.LENGTH_LONG).show();
                     }
+
+
                 }
             }
         });
 
 
     }
+
     public void createGroupeList() {
         modelGroup = new ArrayList<>();
 
@@ -189,14 +195,14 @@ public class CreateGroupeFragment extends Fragment {
 
         //editGroupeName = (EditText) getView().findViewById(R.id.editGroupeName);
 
-        CollectionReference groupeListRef = db.collection("Gruppen").document(email).collection("Test");
+        CollectionReference groupListRef = db.collection("Gruppen").document(email).collection("Test");
 
-        Query query = groupeListRef;
-        FirestoreRecyclerOptions<ModelCreateGroupe> options = new FirestoreRecyclerOptions.Builder<ModelCreateGroupe>()
-                .setQuery(query, ModelCreateGroupe.class)
+        Query query = groupListRef;
+        FirestoreRecyclerOptions<ModelCreateGroup> options = new FirestoreRecyclerOptions.Builder<ModelCreateGroup>()
+                .setQuery(query, ModelCreateGroup.class)
                 .build();
 
-        mAdapter = new CreateGroupeAdapter(options);
+        mAdapter = new CreateGroupAdapter(options);
 
         mRecyclerView = view.findViewById(R.id.inviteRecycler);
         mRecyclerView.setHasFixedSize(true);
@@ -234,36 +240,70 @@ public class CreateGroupeFragment extends Fragment {
         }
     };
 
-//    private void addToGroupe() {
-//
-//        //Gruppenname muss anfangs immer eingetragen werden
-//        editGroupeName = (EditText) getView().findViewById(R.id.editGroupeName);
-//
-//        editInvitePerson = (EditText) getView().findViewById(R.id.editInvitePerson);
-//
-//        auth = FirebaseAuth.getInstance();
-//        db = FirebaseFirestore.getInstance();
-//        auth.getCurrentUser();
-//
-//        final String email = auth.getCurrentUser().getEmail();
-//
-//        DocumentReference docRef = db.collection("Gruppen").document(email).collection(editGroupeName.getText().toString()).document();
-//
-//
-//        ModelCreateGroupe pushUser = new ModelCreateGroupe(editInvitePerson.getText().toString(),"test");
-//        docRef.set(pushUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if (task.isSuccessful()) {
-//                    Toast.makeText(getActivity().getApplicationContext(), "Freund hinzugefügt", Toast.LENGTH_LONG).show();
-//
-//                } else {
-//                    Toast.makeText(getActivity().getApplicationContext(), "Nicht hinzugefügt", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
-//    }
+    private void addToGroupe() {
+
+        //Gruppenname muss anfangs immer eingetragen werden
+        editGroupName = (EditText) getView().findViewById(R.id.editGroupeName);
+
+        editInvitePerson = (EditText) getView().findViewById(R.id.editInvitePerson);
+
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        auth.getCurrentUser();
+
+
+        final String email = auth.getCurrentUser().getEmail();
+
+        DocumentReference docRef = db.collection("Gruppen").document(email).collection(editGroupName.getText().toString()).document(editInvitePerson.getText().toString());
+        DocumentReference userRef = db.collection("Benutzer").document(editInvitePerson.getText().toString());
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String username = (String) document.getData().get("Name");
+
+                        CollectionReference mailCheckRef = db.collection("Gruppen").document(email).collection(editGroupName.getText().toString());
+                        Query query = mailCheckRef.whereEqualTo(editGroupName.getText().toString(), editInvitePerson.getText().toString());
+
+                        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                                if (task.isSuccessful()) {
+                                    QuerySnapshot snapshot = task.getResult();
+                                    if (snapshot.getDocuments().size() < 1) {
+                                        ModelCreateGroup pushUser = new ModelCreateGroup(editInvitePerson.getText().toString(), username);
+                                        docRef.set(pushUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(getActivity().getApplicationContext(), "Freund hinzugefügt", Toast.LENGTH_LONG).show();
+                                                } else {
+                                                    Toast.makeText(getActivity().getApplicationContext(), "Nicht hinzugefügt", Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        Log.d(TAG, "No such document");
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with ", task.getException());
+                                }
+                            }
+                        });
+                    } else {
+
+                    }
+                }
+            }
+        });
+    }
 }
+
 
 
 

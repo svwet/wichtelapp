@@ -12,14 +12,14 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 
-public class CreateGroupeAdapter extends FirestoreRecyclerAdapter<ModelCreateGroupe, CreateGroupeAdapter.GroupHolder> {
+public class CreateGroupAdapter extends FirestoreRecyclerAdapter<ModelCreateGroup, CreateGroupAdapter.GroupHolder> {
 
-    public CreateGroupeAdapter(@NonNull FirestoreRecyclerOptions<ModelCreateGroupe> options) {
+    public CreateGroupAdapter(@NonNull FirestoreRecyclerOptions<ModelCreateGroup> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull GroupHolder groupHolder, int i, @NonNull ModelCreateGroupe modelCreateGroupe) {
+    protected void onBindViewHolder(@NonNull GroupHolder groupHolder, int i, @NonNull ModelCreateGroup modelCreateGroupe) {
 
         groupHolder.benutzer.setText(modelCreateGroupe.getBenutzer());
         groupHolder.name.setText(modelCreateGroupe.getName());

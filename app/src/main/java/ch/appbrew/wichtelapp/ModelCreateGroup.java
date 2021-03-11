@@ -1,14 +1,14 @@
 package ch.appbrew.wichtelapp;
 
-public class ModelCreateGroupe {
+public class ModelCreateGroup {
 
     private String benutzer;
     private String name;
 
-    public ModelCreateGroupe() {
+    public ModelCreateGroup() {
     }
 
-    public ModelCreateGroupe(String benutzer, String name){
+    public ModelCreateGroup(String benutzer, String name){
         this.benutzer = benutzer;
         this.name = name;
 
