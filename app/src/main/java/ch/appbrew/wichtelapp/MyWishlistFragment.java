@@ -46,7 +46,6 @@ public class MyWishlistFragment extends Fragment {
 
     private FirebaseAuth auth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirestoreRecyclerAdapter fAdapter;
 
 
     private String mParam1;
