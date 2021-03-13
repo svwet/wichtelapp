@@ -1,4 +1,4 @@
-package ch.appbrew.wichtelapp;
+package ch.appbrew.wichtelapp.model;
 
 public class MyWishListItem {
 
@@ -7,7 +7,6 @@ public class MyWishListItem {
     private String productDescription;
 
     public MyWishListItem(){
-
     }
 
     public MyWishListItem(String image, String name, String description){
@@ -15,15 +14,19 @@ public class MyWishListItem {
         productName = name;
         productDescription = description;
     }
+
     public void changeProductName(String name){
         productName = name;
     }
+
     public String getProductImage(){
         return productImage;
     }
+
     public String getProductName(){
         return productName;
     }
+
     public String getProductDescription(){
         return productDescription;
     }

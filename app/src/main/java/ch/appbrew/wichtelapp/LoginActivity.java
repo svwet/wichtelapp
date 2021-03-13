@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
         final Button signupButton = findViewById(R.id.Signup);
         final TextView resetPassword = findViewById(R.id.resetPassword);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

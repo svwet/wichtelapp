@@ -1,4 +1,4 @@
-package ch.appbrew.wichtelapp;
+package ch.appbrew.wichtelapp.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import ch.appbrew.wichtelapp.R;
+import ch.appbrew.wichtelapp.model.ModelCreateGroup;
+
 
 public class CreateGroupAdapter extends FirestoreRecyclerAdapter<ModelCreateGroup, CreateGroupAdapter.GroupHolder> {
 
@@ -20,11 +23,8 @@ public class CreateGroupAdapter extends FirestoreRecyclerAdapter<ModelCreateGrou
 
     @Override
     protected void onBindViewHolder(@NonNull GroupHolder groupHolder, int i, @NonNull ModelCreateGroup modelCreateGroupe) {
-
         groupHolder.benutzer.setText(modelCreateGroupe.getBenutzer());
         groupHolder.name.setText(modelCreateGroupe.getName());
-
-
     }
 
     @NonNull
@@ -40,14 +40,11 @@ public class CreateGroupAdapter extends FirestoreRecyclerAdapter<ModelCreateGrou
     }
 
     public class GroupHolder extends RecyclerView.ViewHolder {
-
         private TextView benutzer;
         private TextView name;
 
-
         public GroupHolder(@NonNull View itemView) {
             super(itemView);
-
             benutzer = itemView.findViewById(R.id.createGroupeBenutzer);
             name = itemView.findViewById(R.id.createGroupName);
         }

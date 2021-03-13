@@ -1,4 +1,4 @@
-package ch.appbrew.wichtelapp;
+package ch.appbrew.wichtelapp.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,39 +11,38 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import ch.appbrew.wichtelapp.R;
+import ch.appbrew.wichtelapp.model.ModelGroup;
 
-public class GroupAdapter extends FirestoreRecyclerAdapter<ModelGroup, GroupAdapter.GroupHolder> {
+
+public class GroupAdapter extends FirestoreRecyclerAdapter<ModelGroup, GroupAdapter.GroupHolderListe> {
 
     public GroupAdapter(@NonNull FirestoreRecyclerOptions<ModelGroup> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull GroupHolder groupHolder, int i, @NonNull ModelGroup modelGroup) {
-
-        groupHolder.name.setText(modelGroup.getName());
-
-
+    protected void onBindViewHolder(@NonNull GroupHolderListe groupHolder, int i, @NonNull ModelGroup modelGroup) {
+        groupHolder.groupName.setText(modelGroup.getGroupName());
     }
 
     @NonNull
     @Override
-    public GroupHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public GroupHolderListe onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.model_group,
                 parent, false);
-        return new GroupHolder(view);
+        return new GroupHolderListe(view);
     }
 
     public void deleteItem(int position) {
         getSnapshots().getSnapshot(position).getReference().delete();
     }
 
-    public class GroupHolder extends RecyclerView.ViewHolder {
-
-        private TextView name;
-        public GroupHolder(@NonNull View itemView) {
+    public class GroupHolderListe extends RecyclerView.ViewHolder {
+        private TextView groupName;
+        public GroupHolderListe(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.groupName);
+            groupName = itemView.findViewById(R.id.groupName);
         }
     }
 }

@@ -1,4 +1,4 @@
-package ch.appbrew.wichtelapp;
+package ch.appbrew.wichtelapp.fragment;
 
 import android.os.Bundle;
 
@@ -21,6 +21,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+
+import ch.appbrew.wichtelapp.R;
+import ch.appbrew.wichtelapp.adapter.GroupAdapter;
+import ch.appbrew.wichtelapp.model.ModelGroup;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,10 +68,9 @@ public class GroupFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
         View view = inflater.inflate(R.layout.fragment_gruppen,
                 container, false);
+        createGroupList();
         setUpRecyclerView(view);
         setButtons(view);
         return view;
@@ -75,8 +78,6 @@ public class GroupFragment extends Fragment {
 
     public void setButtons(View view){
         FloatingActionButton btnAddGroup = getActivity().findViewById(R.id.btnAddGrp);
-
-
         view.findViewById(R.id.btnAddGrp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,28 +85,42 @@ public class GroupFragment extends Fragment {
                         .navigate(R.id.action_fragment_gruppen_to_createGroupeFragment);
             }
         });
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        gAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        gAdapter.stopListening();
+    }
+
+
+    public void createGroupList() {
+        //modelGroups = new ArrayList<>();
     }
 
     private void setUpRecyclerView(View view) {
         auth = FirebaseAuth.getInstance();
         auth.getCurrentUser();
         final String email = auth.getCurrentUser().getEmail();
-
-        CollectionReference groupListRef = db.collection("MeineWunschliste").document(email).collection("Liste");
-
+        CollectionReference groupListRef = db.collection("Benutzer").document(email).collection("Gruppen");
         Query query = groupListRef;
         FirestoreRecyclerOptions<ModelGroup> options = new FirestoreRecyclerOptions.Builder<ModelGroup>()
                 .setQuery(query, ModelGroup.class)
                 .build();
-
         gAdapter = new GroupAdapter(options);
         gRecyclerView = view.findViewById(R.id.recyclerViewGroup);
         gRecyclerView.setHasFixedSize(true);
         gLayoutManager = new LinearLayoutManager(getActivity());
         gRecyclerView.setLayoutManager(gLayoutManager);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(gRecyclerView);
+        //new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(gRecyclerView);
         gRecyclerView.setAdapter(gAdapter);
+        gAdapter.notifyDataSetChanged();
     }
 
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -117,8 +132,6 @@ public class GroupFragment extends Fragment {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             gAdapter.deleteItem(viewHolder.getAdapterPosition());
-
         }
     };
-
 }

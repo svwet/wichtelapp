@@ -1,4 +1,4 @@
-package ch.appbrew.wichtelapp;
+package ch.appbrew.wichtelapp.model;
 
 public class ModelCreateGroup {
 
@@ -11,7 +11,6 @@ public class ModelCreateGroup {
     public ModelCreateGroup(String benutzer, String name){
         this.benutzer = benutzer;
         this.name = name;
-
     }
 
     public String getBenutzer() {
