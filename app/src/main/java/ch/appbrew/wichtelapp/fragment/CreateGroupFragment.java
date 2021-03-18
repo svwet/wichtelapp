@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import androidx.fragment.app.Fragment;
 
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +24,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 
@@ -102,10 +104,13 @@ public class CreateGroupFragment extends Fragment {
                 checkInvitePerson(view);
             }
         });
+
+        FloatingActionButton btnCreateGroup = getActivity().findViewById(R.id.btnCreateGrp);
         view.findViewById(R.id.btnCreateGrp).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                createGrp();
+            public void onClick(View view) {
+                NavHostFragment.findNavController(CreateGroupFragment.this)
+                        .navigate(R.id.action_createGroupeFragment_to_fragment_gruppen);
             }
         });
     }
@@ -140,6 +145,7 @@ public class CreateGroupFragment extends Fragment {
                 }
             }
         });
+        editGroupName.setEnabled(false);
     }
 
     public void createGroupeList() {

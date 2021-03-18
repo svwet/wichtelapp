@@ -66,5 +66,9 @@
         android:id="@+id/createGroupeFragment"
         android:name="ch.appbrew.wichtelapp.fragment.CreateGroupFragment"
         android:label="Neue Gruppe erstellen"
-        tools:layout="@layout/fragment_create_groupe" />
+        tools:layout="@layout/fragment_create_groupe" >
+        <action
+            android:id="@+id/action_createGroupeFragment_to_fragment_gruppen"
+            app:destination="@id/fragment_gruppen" />
+    </fragment>
 </navigation>
