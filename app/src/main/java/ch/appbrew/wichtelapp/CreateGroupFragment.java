@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,14 +129,7 @@ public class CreateGroupFragment extends Fragment {
                 createGrp();
             }
         });
-        view.findViewById(R.id.btnRndWichtel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rndWichtel();
-            }
-        });
-
-
+        
     }
 
     private void rndWichtel() {
@@ -157,32 +151,34 @@ public class CreateGroupFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
 
+        editGroupName.setFocusable(false);
+
         CollectionReference mailCheckRef = db.collection("Benutzer");
         Query query = mailCheckRef.whereEqualTo("Benutzer", editInvitePerson.getText().toString());
 
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                if (task.isSuccessful()) {
-                    QuerySnapshot snapshot = task.getResult();
-                    if (snapshot.getDocuments().size() > 0) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Freund hinzugefügt", Toast.LENGTH_LONG).show();
-                        addToGroupe();
 
-                    } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "Freund nicht registriert", Toast.LENGTH_LONG).show();
+            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                    if (task.isSuccessful()) {
+                        QuerySnapshot snapshot = task.getResult();
+                        if (snapshot.getDocuments().size() > 0) {
+                            Toast.makeText(getActivity().getApplicationContext(), "Freund hinzugefügt", Toast.LENGTH_LONG).show();
+                            addToGroupe();
+
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), "Freund nicht registriert", Toast.LENGTH_LONG).show();
+                        }
+
+                        mAdapter.notifyDataSetChanged();
                     }
-
-
                 }
-            }
-        });
-
-
-    }
-
+            });
+        }
     public void createGroupeList() {
         modelGroup = new ArrayList<>();
 
@@ -317,7 +313,6 @@ public class CreateGroupFragment extends Fragment {
                             }
                         });
                     } else {
-
                     }
                 }
             }
