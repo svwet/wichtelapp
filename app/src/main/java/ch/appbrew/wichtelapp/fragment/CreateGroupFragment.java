@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +36,12 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import ch.appbrew.wichtelapp.R;
 import ch.appbrew.wichtelapp.adapter.CreateGroupAdapter;
@@ -61,6 +67,8 @@ public class CreateGroupFragment extends Fragment {
     private FirebaseAuth auth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirestoreRecyclerAdapter fAdapter;
+    private ArrayList<String> userList = new ArrayList<>();
+    private HashMap<String, String> finalWichtel = new HashMap<>();
 
     public CreateGroupFragment() {
         // Required empty public constructor
@@ -109,20 +117,45 @@ public class CreateGroupFragment extends Fragment {
         view.findViewById(R.id.btnCreateGrp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                rndWichtel(userList);
+                createDbRef(finalWichtel);
                 NavHostFragment.findNavController(CreateGroupFragment.this)
                         .navigate(R.id.action_createGroupeFragment_to_fragment_gruppen);
             }
         });
     }
 
-    private void rndWichtel() {
-        Toast.makeText(getActivity().getApplicationContext(), "Die Würfel sind gefallen!", Toast.LENGTH_LONG).show();
+    private void rndWichtel(ArrayList<String> list) {
+        if (list.size() > 1) {
+            Collections.shuffle(list);
+            for (int i = 0; i < list.size(); i++) {
+                if (i == list.size()-1) {
+                    finalWichtel.put(list.get(list.size()-1), list.get(0));
+                } else {
+                    finalWichtel.put(list.get(i), list.get(i+1));
+                }
+            }
+        }
     }
 
-    private void createGrp() {
-        Toast.makeText(getActivity().getApplicationContext(), "Gruppe erstellt!", Toast.LENGTH_LONG).show();
-    }
+    private void createDbRef(HashMap<String, String> map) {
+        db = FirebaseFirestore.getInstance();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            Map<String, Object> createStamp = new HashMap<>();
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            createStamp.put("wichtelName", entry.getValue().toString());
+           db.collection("Benutzer")
+                   .document(entry.getKey().toString())
+                   .collection("Wichtel").document(entry.getValue().toString()).set(createStamp)
+                   .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d(TAG, "Document added with ID ");
+                }
+            });
+        }
 
+    }
     private void checkInvitePerson(View view) {
         editGroupName = (EditText) getView().findViewById(R.id.editGroupeName);
         editInvitePerson = (EditText) getView().findViewById(R.id.editInvitePerson);
@@ -254,6 +287,12 @@ public class CreateGroupFragment extends Fragment {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(getActivity().getApplicationContext(), "Freund hinzugefügt", Toast.LENGTH_LONG).show();
                                                     ModelGroup pushGroupToUser = new ModelGroup(editGroupName.getText().toString(), email);
+                                                    if (!userList.contains(email)) {
+                                                        userList.add(email);
+                                                        userList.add(editInvitePerson.getText().toString());
+                                                    } else {
+                                                        userList.add(editInvitePerson.getText().toString());
+                                                    }
                                                     userGroupRef.set(pushGroupToUser);
                                                     updateAdapter();
                                                 } else {
@@ -278,7 +317,7 @@ public class CreateGroupFragment extends Fragment {
     }
 
     public void pushAdminToGroup(String admin, String group) {
-        DocumentReference userRef = db.collection("Benutzer").document(admin).collection("Gruppen").document();
+        DocumentReference userRef = db.collection("Benutzer").document(admin).collection("Gruppen").document(editGroupName.getText().toString());
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
