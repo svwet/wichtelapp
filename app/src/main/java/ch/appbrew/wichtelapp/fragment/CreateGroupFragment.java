@@ -108,12 +108,6 @@ public class CreateGroupFragment extends Fragment {
                 createGrp();
             }
         });
-        view.findViewById(R.id.btnRndWichtel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rndWichtel();
-            }
-        });
     }
 
     private void rndWichtel() {
