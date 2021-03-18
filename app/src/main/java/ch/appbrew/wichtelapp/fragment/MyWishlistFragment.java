@@ -1,4 +1,4 @@
-package ch.appbrew.wichtelapp;
+package ch.appbrew.wichtelapp.fragment;
 
 import android.os.Bundle;
 
@@ -22,6 +22,10 @@ import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 
+import ch.appbrew.wichtelapp.R;
+import ch.appbrew.wichtelapp.adapter.MyWishListAdapter;
+import ch.appbrew.wichtelapp.model.MyWishListItem;
+
 public class MyWishlistFragment extends Fragment {
 
     private ArrayList<MyWishListItem> myWishList;
@@ -34,10 +38,6 @@ public class MyWishlistFragment extends Fragment {
 
     private FirebaseAuth auth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
-    private String mParam1;
-    private String mParam2;
 
     public MyWishlistFragment() {
         // Required empty public constructor
@@ -61,22 +61,14 @@ public class MyWishlistFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_meine_wunschliste,
                 container, false);
-
         createExampleList();
-
         setUpRecyclerView(view);
         setButtons(view);
         return view;
@@ -94,21 +86,17 @@ public class MyWishlistFragment extends Fragment {
 
     public void createExampleList() {
         myWishList = new ArrayList<>();
-
     }
 
     private void setUpRecyclerView(View view) {
         auth = FirebaseAuth.getInstance();
         auth.getCurrentUser();
         final String email = auth.getCurrentUser().getEmail();
-
         CollectionReference wishListRef = db.collection("MeineWunschliste").document(email).collection("Liste");
-
         Query query = wishListRef;
         FirestoreRecyclerOptions<MyWishListItem> options = new FirestoreRecyclerOptions.Builder<MyWishListItem>()
                 .setQuery(query, MyWishListItem.class)
                 .build();
-
         mAdapter = new MyWishListAdapter(options);
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -116,8 +104,6 @@ public class MyWishlistFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
-
-
     }
 
     @Override
@@ -152,9 +138,7 @@ public class MyWishlistFragment extends Fragment {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             mAdapter.deleteItem(viewHolder.getAdapterPosition());
-
         }
     };
-
 }
 

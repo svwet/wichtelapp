@@ -45,16 +45,13 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
         final EditText editTextEmail = findViewById(R.id.username);
         final EditText editTextPassword = findViewById(R.id.password);
         final EditText editTextRepeatPassword = findViewById(R.id.repeatPassword);
         final EditText editTextName = findViewById(R.id.name);
         final Button signupButton = findViewById(R.id.signup);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
-
         auth = FirebaseAuth.getInstance(); //need firebase authentication instance
-
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +99,6 @@ public class SignupActivity extends AppCompatActivity {
                                 Log.w(TAG, "Error while registrate user");
                             }
                         });
-
             }
         });
     }
@@ -112,7 +108,6 @@ public class SignupActivity extends AppCompatActivity {
         Map<String, Object> map = new HashMap<>();
         map.put("Name", name);
         map.put("Benutzer", user);
-
         database.collection("Benutzer").document(user)
                 .set(map)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

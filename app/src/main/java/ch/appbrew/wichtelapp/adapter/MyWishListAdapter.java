@@ -1,4 +1,4 @@
-package ch.appbrew.wichtelapp;
+package ch.appbrew.wichtelapp.adapter;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +16,8 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.Base64;
 
+import ch.appbrew.wichtelapp.R;
+import ch.appbrew.wichtelapp.model.MyWishListItem;
 import ch.appbrew.wichtelapp.utils.ByteUtil;
 
 public class MyWishListAdapter extends FirestoreRecyclerAdapter<MyWishListItem, MyWishListAdapter.WishHolder> {
@@ -30,11 +32,9 @@ public class MyWishListAdapter extends FirestoreRecyclerAdapter<MyWishListItem, 
         byte[] compressed = Base64.getDecoder().decode(encodedString);
         byte[] decompressed = ByteUtil.decompress(compressed);
         Bitmap decodedImage = BitmapFactory.decodeByteArray(decompressed, 0, decompressed.length);
-
         wishHolder.productImage.setImageBitmap(decodedImage);
         wishHolder.productName.setText(myWishListItem.getProductName());
         wishHolder.productDescription.setText(myWishListItem.getProductDescription());
-
     }
 
     @NonNull
@@ -50,14 +50,11 @@ public class MyWishListAdapter extends FirestoreRecyclerAdapter<MyWishListItem, 
     }
 
     public class WishHolder extends RecyclerView.ViewHolder {
-
         private ImageView productImage;
         private TextView productName;
         private TextView productDescription;
-
         public WishHolder(@NonNull View itemView) {
             super(itemView);
-
             productImage = itemView.findViewById(R.id.productImage);
             productName = itemView.findViewById(R.id.productName);
             productDescription = itemView.findViewById(R.id.productDescription);

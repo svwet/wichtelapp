@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_gruppen"
-        android:name="ch.appbrew.wichtelapp.GroupFragment"
+        android:name="ch.appbrew.wichtelapp.fragment.GroupFragment"
         android:label="Gruppen"
         tools:layout="@layout/fragment_gruppen" >
         <action
@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_meineWunschliste"
-        android:name="ch.appbrew.wichtelapp.MyWishlistFragment"
+        android:name="ch.appbrew.wichtelapp.fragment.MyWishlistFragment"
         android:label="My wish list"
         tools:layout="@layout/fragment_meine_wunschliste" >
         <action
@@ -45,17 +45,17 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_wichtelwunschliste"
-        android:name="ch.appbrew.wichtelapp.WichtelWishlistFragment"
+        android:name="ch.appbrew.wichtelapp.fragment.WichtelWishlistFragment"
         android:label="Wichtel Wunschliste"
         tools:layout="@layout/fragment_wichtelwunschliste" />
     <fragment
         android:id="@+id/fragment_benutzereinstellung"
-        android:name="ch.appbrew.wichtelapp.UsersettingFragment"
+        android:name="ch.appbrew.wichtelapp.fragment.UsersettingFragment"
         android:label="Benutzereinstellung"
         tools:layout="@layout/fragment_benutzereinstellung" />
     <fragment
         android:id="@+id/addItemToWishlist"
-        android:name="ch.appbrew.wichtelapp.AddItemToWishlistFragment"
+        android:name="ch.appbrew.wichtelapp.fragment.AddItemToWishlistFragment"
         android:label="fragment_add_item_to_wishlist"
         tools:layout="@layout/fragment_add_item_to_wishlist" >
         <action
@@ -64,7 +64,7 @@
     </fragment>
     <fragment
         android:id="@+id/createGroupeFragment"
-        android:name="ch.appbrew.wichtelapp.CreateGroupFragment"
+        android:name="ch.appbrew.wichtelapp.fragment.CreateGroupFragment"
         android:label="Neue Gruppe erstellen"
         tools:layout="@layout/fragment_create_groupe" />
 </navigation>
