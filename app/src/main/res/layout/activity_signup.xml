@@ -39,9 +39,11 @@
 
     <EditText
         android:id="@+id/username"
-        android:layout_width="299dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="40dp"
         android:autofillHints="@string/prompt_email"
         android:drawableEnd="@drawable/ic_user"
         android:hint="@string/prompt_email"
@@ -56,7 +58,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:layout_marginEnd="40dp"
         android:autofillHints="@string/prompt_password"
         android:drawableEnd="@drawable/ic_pw"

@@ -35,5 +35,4 @@ public class ByteUtil {
             return null;
         }
     }
-
 }

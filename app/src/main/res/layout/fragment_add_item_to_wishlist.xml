@@ -5,7 +5,7 @@
     android:id="@+id/addItemMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddItemToWishlistFragment">
+    tools:context=".fragment.AddItemToWishlistFragment">
 
 
     <TextView
@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="136dp"
         android:gravity="center"
-        android:text="Add wish"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +29,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="40dp"
         android:autofillHints="Product name"
-        android:hint="Product name"
+        android:hint="Produktname"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -45,7 +44,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="40dp"
         android:autofillHints="Product description"
-        android:hint="Product description"
+        android:hint="Beschreibung"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -72,7 +71,7 @@
         android:layout_marginStart="64dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="40dp"
-        android:text="add picture"
+        android:text="Bild hinzufügen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnInsertPic"
         app:layout_constraintStart_toStartOf="parent" />
@@ -86,7 +85,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginEnd="64dp"
         android:layout_marginBottom="40dp"
-        android:text="Add to wish"
+        android:text="Hinzufügen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnTakeSnap" />

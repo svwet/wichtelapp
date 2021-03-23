@@ -1,7 +1,5 @@
-package ch.appbrew.wichtelapp;
+package ch.appbrew.wichtelapp.fragment;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,28 +9,22 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+
+import ch.appbrew.wichtelapp.R;
+import ch.appbrew.wichtelapp.adapter.MyWishListAdapter;
+import ch.appbrew.wichtelapp.model.MyWishListItem;
 
 public class MyWishlistFragment extends Fragment {
 
@@ -46,11 +38,6 @@ public class MyWishlistFragment extends Fragment {
 
     private FirebaseAuth auth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirestoreRecyclerAdapter fAdapter;
-
-
-    private String mParam1;
-    private String mParam2;
 
     public MyWishlistFragment() {
         // Required empty public constructor
@@ -74,31 +61,19 @@ public class MyWishlistFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_meine_wunschliste,
                 container, false);
-
         createExampleList();
-
         setUpRecyclerView(view);
         setButtons(view);
         return view;
     }
 
-    //    public void insertItem(int position) {
-//        myWishList.add(position, new MyWishListItem(R.drawable.ic_user, "New Item At Position" + position, "This is Line 2"));
-//        mAdapter.notifyItemInserted(position);
-//    }
     public void removeItem(int position) {
         myWishList.remove(position);
         mAdapter.notifyItemRemoved(position);
@@ -111,21 +86,17 @@ public class MyWishlistFragment extends Fragment {
 
     public void createExampleList() {
         myWishList = new ArrayList<>();
-
     }
 
     private void setUpRecyclerView(View view) {
         auth = FirebaseAuth.getInstance();
         auth.getCurrentUser();
         final String email = auth.getCurrentUser().getEmail();
-
         CollectionReference wishListRef = db.collection("MeineWunschliste").document(email).collection("Liste");
-
         Query query = wishListRef;
         FirestoreRecyclerOptions<MyWishListItem> options = new FirestoreRecyclerOptions.Builder<MyWishListItem>()
                 .setQuery(query, MyWishListItem.class)
                 .build();
-
         mAdapter = new MyWishListAdapter(options);
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -133,8 +104,6 @@ public class MyWishlistFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
-
-
     }
 
     @Override
@@ -169,9 +138,7 @@ public class MyWishlistFragment extends Fragment {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             mAdapter.deleteItem(viewHolder.getAdapterPosition());
-
         }
     };
-
 }
 

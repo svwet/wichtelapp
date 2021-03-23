@@ -1,4 +1,4 @@
-package ch.appbrew.wichtelapp;
+package ch.appbrew.wichtelapp.fragment;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.appbrew.wichtelapp.R;
 import ch.appbrew.wichtelapp.utils.DialogUtil;
 
 import static android.content.ContentValues.TAG;
@@ -37,9 +38,6 @@ public class UsersettingFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private FirebaseAuth auth;
     private FirebaseFirestore database;
 
@@ -50,8 +48,6 @@ public class UsersettingFragment extends Fragment {
     public static UsersettingFragment newInstance(String param1, String param2) {
         UsersettingFragment fragment = new UsersettingFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,10 +55,6 @@ public class UsersettingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -75,7 +67,6 @@ public class UsersettingFragment extends Fragment {
         database = FirebaseFirestore.getInstance();
         auth.getCurrentUser();
         final String email = auth.getCurrentUser().getEmail();
-
         DocumentReference docRef = database.collection("Benutzer").document(email);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -105,16 +96,13 @@ public class UsersettingFragment extends Fragment {
                 EditText oldPasswordEdit = (EditText) getView().findViewById(R.id.oldpassword);
                 EditText newPasswordEdit = (EditText) getView().findViewById(R.id.newpassword);
                 EditText newNameEdit = (EditText) getView().findViewById(R.id.name);
-
                 String oldPasswordStr = oldPasswordEdit.getText().toString();
                 String newPasswordStr = newPasswordEdit.getText().toString();
                 String newNameStr = newNameEdit.getText().toString();
-
                 if(!oldPasswordStr.isEmpty() && !newPasswordStr.isEmpty()) {
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     AuthCredential credential = EmailAuthProvider
                             .getCredential(email, oldPasswordStr);
-
                     user.reauthenticate(credential)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

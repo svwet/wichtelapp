@@ -1,4 +1,4 @@
-package ch.appbrew.wichtelapp;
+package ch.appbrew.wichtelapp.fragment;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -42,6 +42,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 
+import ch.appbrew.wichtelapp.R;
+import ch.appbrew.wichtelapp.model.MyWishListItem;
 import ch.appbrew.wichtelapp.utils.ByteUtil;
 
 /**
@@ -52,19 +54,9 @@ import ch.appbrew.wichtelapp.utils.ByteUtil;
 public class AddItemToWishlistFragment extends Fragment {
 
     private ArrayList<MyWishListItem> addItem;
-
-
     private EditText editProductName;
     private EditText editProductDescr;
     private int IMAGE_CAPTURE_CODE = 1001;
-
-    // TODO: Rename parameter arguments, choose names that match
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private ImageView viewImage;
     private Button addSnap;
@@ -93,9 +85,6 @@ public class AddItemToWishlistFragment extends Fragment {
     public static AddItemToWishlistFragment newInstance(String param1, String param2) {
         AddItemToWishlistFragment fragment = new AddItemToWishlistFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -103,27 +92,21 @@ public class AddItemToWishlistFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_item_to_wishlist,
                 container, false);
-
         setButton(view);
-
         return view;
     }
 
     public void setButton(View view) {
         addToList = view.findViewById(R.id.btnInsertPic);
         addSnap = view.findViewById(R.id.btnTakeSnap);
-
         addSnap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,22 +117,18 @@ public class AddItemToWishlistFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 pushFirebase();
-
             }
         });
     }
 
 
     public boolean onCreateOptionMenu(Menu menu) {
-
         getActivity().getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
     private void selectImage() {
-
         viewImage = (ImageView) getView().findViewById(R.id.viewImage);
-
         final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add Photo");
@@ -193,7 +172,6 @@ public class AddItemToWishlistFragment extends Fragment {
                 Bitmap bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
                 viewImage.setImageBitmap(bitmap);
                 String path = android.os.Environment.getExternalStorageDirectory()
-
                         + File.separator
                         + "Phoenix" + File.separator + "default";
                 f.delete();
@@ -227,22 +205,17 @@ public class AddItemToWishlistFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance();
         auth.getCurrentUser();
-
         final String email = auth.getCurrentUser().getEmail();
         DocumentReference docRef = database.collection("MeineWunschliste").document(email).collection("Liste").document();
-
         pushProductName = (EditText) getView().findViewById(R.id.insProductName);
         pushProductDescription = (EditText) getView().findViewById(R.id.insProductDescription);
         pushProductPicture = (ImageView) getView().findViewById(R.id.viewImage);
-
         Bitmap bitmap = ((BitmapDrawable) pushProductPicture.getDrawable()).getBitmap();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         byte[] compressed = ByteUtil.compress(byteArray);
         String EncodedString = Base64.getEncoder().encodeToString(compressed);
-
-
         MyWishListItem pushNewItem = new MyWishListItem(EncodedString, pushProductName.getText().toString(), pushProductDescription.getText().toString());
         docRef.set(pushNewItem).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

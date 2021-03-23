@@ -8,13 +8,13 @@
             android:icon="@drawable/ic_home"/>
         <item
             android:id="@+id/fragment_gruppen"
-            android:title="Groupe"
-            android:icon="@drawable/ic_gruppe"/>
+            android:icon="@drawable/ic_gruppe"
+            android:title="Gruppen" />
 
         <item
             android:id="@+id/fragment_meineWunschliste"
-            android:title="My wish list"
-            android:icon="@drawable/ic_meinewunschliste"/>
+            android:icon="@drawable/ic_meinewunschliste"
+            android:title="Meine Wunschliste" />
         <item
             android:id="@+id/fragment_wichtelwunschliste"
             android:title="Wichtelwunschliste"
